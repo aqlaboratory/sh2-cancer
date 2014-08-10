@@ -7,7 +7,6 @@
 Options[PEM]={YPosition->7,AlphabetDomain->DeleteCases[AlphaAAs,"-"],FirstOrderDomainEnergies->False,FirstOrderPeptideEnergies->True};
 PEM[seqSH2_,\[Beta]sRaw_,OptionsPattern[]]:=Block[
 	{\[Beta]s=MapAt[Transpose[#,{1,3,2,4}]&,\[Beta]sRaw,3],
-	 mdPeptides=metadataPeptidesTrimmedConcatenatedFiveSourcesAugmented,
 	 alphaAADomain=OptionValue[AlphabetDomain],posY=OptionValue[YPosition],dummy,rules},
 	dummy=SparseArray[{},Dimensions[\[Beta]s[[2]]]];
 	rules=Dispatch[Append[Thread[alphaAADomain->Range[Length[alphaAADomain]]],"-"->0]];

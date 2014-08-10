@@ -1,10 +1,19 @@
 (* ::Package:: *)
 
 (* ::Text:: *)
-(*Amino Acid Color Scheme (http://www.bioinformatics.nl/~berndb/aacolour.html)*)
+(*Amino acids color scheme (http://www.bioinformatics.nl/~berndb/aacolour.html)*)
 
 
 ColorSchemeMAEditorAAs={Black,RGBColor[7/15,13/15,8/15],RGBColor[3/5,14/15,2/5],RGBColor[1/3,11/15,1/5],RGBColor[1/3,11/15,1/5],RGBColor[3/5,3/5,1],RGBColor[7/15,13/15,8/15],RGBColor[1/3,1/3,1],RGBColor[2/5,11/15,1],RGBColor[1,4/5,7/15],RGBColor[2/5,11/15,1],RGBColor[2/5,11/15,1],RGBColor[1/3,11/15,1/5],RGBColor[14/15,2/3,2/3],RGBColor[1/3,11/15,1/5],RGBColor[1,4/5,7/15],RGBColor[1,4/15,1/3],RGBColor[1,4/15,1/3],RGBColor[2/5,11/15,1],RGBColor[3/5,3/5,1],RGBColor[3/5,3/5,1]};
+
+
+(* ::Text:: *)
+(*Other color schemes*)
+
+
+ColorSchemeBright=Block[{blue=RGBColor[0/255,173/255,220/255],green=RGBColor[127/255,209/255,59/255],orange=RGBColor[254/255,184/255,10/255],red=RGBColor[219/255,37/255,38/255]},{green,red,blue,orange}];
+ColorSchemeBright2=Block[{blue=RGBColor[0/255,126/255,234/255],green=RGBColor[127/255,209/255,59/255],orange=RGBColor[254/255,184/255,10/255],red=RGBColor[234/255,21/255,122/255]},{green,red,blue,orange}];
+ColorSchemeDark=Block[{blue=RGBColor[5/255,53/255,118/255],green=RGBColor[106/255,139/255,31/255],red=RGBColor[146/255,25/255,28/255],orange=RGBColor[249/255,160/255,27/255]},{green,red,blue,orange}];
 
 
 (* ::Text:: *)

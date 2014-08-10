@@ -64,3 +64,28 @@ ImportBetaMatrix[file_String,seqRepDomain_,seqRepPeptide_,opts:OptionsPattern[Se
 FlattenUpperTriangularize[mat_]:=Module[
 	{A=Unique[],B=Unique[]},
 	DeleteCases[Flatten[UpperTriangularize[mat/.{0.->A,0->B}]],0|0.]/.{A->0.,B->0}]
+
+
+(* ::Text:: *)
+(*Loads symbols into Mathematica contexts*)
+
+
+Attributes[LoadSymbol]={HoldRest};
+Options[LoadSymbol]={IgnoredContexts->{"Global`"}};
+LoadSymbol[fldr_String,symbol_Symbol,context_:Context[],OptionsPattern[]]:=With[
+	{path=If[MemberQ[OptionValue[IgnoredContexts],context],fldr,FileNameJoin[Prepend[StringSplit[context,"`"],fldr]]],
+	 symbolname=SymbolName[Unevaluated[symbol]]},
+	If[Length[OwnValues[symbol]]===0,Remove[symbol]];(*Needed because MMA parser otherwise creates symbol in local context.*)
+	If[Length[ToExpression["OwnValues["~~context~~symbolname~~"]"]]===0,
+	Switch[FileType[FileNameJoin[{path,symbolname}]],
+		File,
+		Set[Evaluate[Symbol[context~~symbolname]],Get[FileNameJoin[{path,symbolname}]]],
+		Directory,
+		Set[
+			Evaluate[Symbol[context~~symbolname]],
+			Hold[Get[#]]&/@Table[FileNameJoin[{path,symbolname,ToString[i]}],{i,Length[FileNames[FileNameJoin[{path,symbolname,"*"}]]]}]]];
+	"Loaded "~~symbolname~~" into "~~context~~" from "~~path,
+	symbolname~~" is Already Loaded"]]
+LoadSymbol[fldr_String,symbols:{__Symbol},context_:Context[],opts:OptionsPattern[]]:=StringJoin[Riffle[
+	List@@(Function[symbol,LoadSymbol[fldr,symbol,context,opts],HoldFirst]/@ReplacePart[Unevaluated[symbols],0->Hold]),
+	"\n"]]
