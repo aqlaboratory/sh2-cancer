@@ -22,12 +22,11 @@ nLambda <- as.integer(args[19]); #300
 nLambdaMinRatio <- as.numeric(args[20]); #0 .000001
 nLambdaPredIdx <- as.numeric(args[21]);
 nCores <- as.integer(args[22]);
+fldrIn <- args[23];
+fldrOut <- args[23];
 flagStandardize <- FALSE;
 flagTraining <- (lblMode == "Training");
 flagPrediction <- (lblMode == "Prediction");
-
-fldrIn <- "/data/";
-fldrOut <- "/data/";
 
 library("glmnet");
 library("iterators");
