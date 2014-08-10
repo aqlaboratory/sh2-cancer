@@ -10,27 +10,61 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     42309,        832]
-NotebookOptionsPosition[     41208,        789]
-NotebookOutlinePosition[     41548,        804]
-CellTagsIndexPosition[     41505,        801]
+NotebookDataLength[     44889,        896]
+NotebookOptionsPosition[     43641,        848]
+NotebookOutlinePosition[     43981,        863]
+CellTagsIndexPosition[     43938,        860]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
-Cell["Set data directory", "Text",
- CellChangeTimes->{{3.61668374010996*^9, 3.6166837431708713`*^9}}],
+Cell[TextData[{
+ StyleBox["Manually",
+  FontColor->RGBColor[1, 0, 0]],
+ " set root directory (where repository contents were unpacked) to ",
+ StyleBox["fldr",
+  FontSlant->"Italic"],
+ " symbol."
+}], "Text",
+ CellChangeTimes->{{3.61668374010996*^9, 3.6166837431708713`*^9}, {
+  3.6167016048177323`*^9, 3.616701676681406*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"fldr", "=", "\"\</sh2-cancer/\>\""}], ";", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Set", " ", "to", " ", "correct", " ", "folder", " ", "where", " ", 
+    "repository", " ", "contents", " ", "were", " ", 
+    RowBox[{"unpacked", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  "\"\<Done\>\""}]], "Input",
+ CellChangeTimes->{{3.6166837447944145`*^9, 3.616683753518712*^9}, {
+  3.616701521793441*^9, 3.6167015227466335`*^9}, {3.6167016596639233`*^9, 
+  3.6167016650239654`*^9}, {3.6167020611214294`*^9, 3.616702074497651*^9}}],
+
+Cell[BoxData["\<\"Done\"\>"], "Output",
+ CellChangeTimes->{3.6166837537949743`*^9, 3.61670175928531*^9}]
+}, {2}]],
+
+Cell["Set other directories", "Text",
+ CellChangeTimes->{{3.616701689964105*^9, 3.61670169310511*^9}, {
+  3.6167017309856787`*^9, 3.616701736079791*^9}}],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"fldrData", "=", "\"\<\>\""}], 
+  RowBox[{"fldrData", "=", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{"fldr", ",", "\"\<data\>\""}], "}"}], "]"}]}], 
   ";"}], "\[IndentingNewLine]", "\"\<Done\>\""}], "Input",
- CellChangeTimes->{{3.6166837447944145`*^9, 3.616683753518712*^9}}],
+ CellChangeTimes->{{3.6167017371111145`*^9, 3.6167017536910667`*^9}}],
 
 Cell[BoxData["\<\"Done\"\>"], "Output",
- CellChangeTimes->{3.6166837537949743`*^9}]
+ CellChangeTimes->{{3.6167017541442213`*^9, 3.6167017609729295`*^9}}]
 }, {2}]],
 
 Cell["Load needed symbols", "Text",
@@ -422,13 +456,23 @@ Cell[BoxData["\<\"Done\"\>"], "Output",
  CellChangeTimes->{3.616685155280027*^9}]
 }, {2}]],
 
-Cell["\<\
-Execute following bash script to train MSM/D model in R. (Note: Potentially \
-computationally intensive. Recommended to be run on compute cluster.)\
-\>", "Text",
+Cell[TextData[{
+ "Execute bash script to train MSM/D model in R. ",
+ StyleBox["fldr",
+  FontSlant->"Italic"],
+ " environmental variable must be ",
+ StyleBox["manually",
+  FontColor->RGBColor[1, 0, 0]],
+ " set to root directory. (Note: Potentially computationally intensive; \
+recommended to be run on compute cluster. Insure that all necessary R \
+packages are installed.)"
+}], "Text",
  CellChangeTimes->{{3.6166897616350307`*^9, 3.6166897716517067`*^9}, {
   3.6166903237163243`*^9, 3.616690339672228*^9}, {3.616690565604146*^9, 
-  3.6166905669323664`*^9}}],
+  3.6166905669323664`*^9}, {3.6167012459344745`*^9, 3.6167012681402955`*^9}, {
+  3.61670152976296*^9, 3.61670154803048*^9}, {3.616701707061262*^9, 
+  3.616701708311482*^9}, {3.6167017754429216`*^9, 3.616701775739815*^9}, {
+  3.6167018175723557`*^9, 3.6167018191662226`*^9}}],
 
 Cell[CellGroupData[{
 
@@ -437,6 +481,19 @@ Cell[BoxData[{
   RowBox[{
    RowBox[{
     RowBox[{"#", "!"}], "/", "bin"}], "/", "bash"}], "\n"}], "\n", 
+ RowBox[{"fldr", "=", 
+  RowBox[{
+   RowBox[{
+   "\"\</sh2-cancer/\>\"", " ", "#Set", " ", "to", " ", "correct", " ", 
+    "folder", " ", "where", " ", "repository", " ", "contents", " ", "were", 
+    " ", 
+    RowBox[{"unpacked", ".", "\n", "fldrData"}]}], "=", 
+   RowBox[{"$", 
+    RowBox[{"{", "fldr", "}"}], "\"\<data/\>\""}]}]}], "\n", 
+ RowBox[{
+  RowBox[{"fldrCode", "=", 
+   RowBox[{"$", 
+    RowBox[{"{", "fldr", "}"}], "\"\<code/\>\""}]}], "\n"}], "\n", 
  RowBox[{"nodes", "=", "1"}], "\n", 
  RowBox[{"prefixData", "=", "\"\<PNRFSA\>\""}], "\n", 
  RowBox[{"infixData", "=", "\"\<FSORNCNDPFBASCPC\>\""}], "\n", 
@@ -495,12 +552,11 @@ Cell[BoxData[{
    RowBox[{"for", " ", "intercept", " ", "in", " ", "\"\<TRUE\>\""}], ";", 
    " ", "do"}], " "}], "\n", 
  RowBox[{"\t\t   ", 
-  RowBox[{
-   RowBox[{
-    RowBox[{"Rscript", " ", "/", "code"}], "/", 
-    RowBox[{"learning", ".", "r"}]}], " ", "\"\<\\\"${prefixData}\\\"\>\"", 
-   " ", "\"\<\\\"${infixData}\\\"\>\"", " ", "\"\<\\\"${postfixData}\\\"\>\"",
-    " ", "\"\<\\\"${prefixDataPrediction}\\\"\>\"", " ", 
+  RowBox[{"Rscript", " ", "$", 
+   RowBox[{"{", "fldrCode", "}"}], 
+   RowBox[{"learning", ".", "R"}], " ", "\"\<\\\"${prefixData}\\\"\>\"", " ", 
+   "\"\<\\\"${infixData}\\\"\>\"", " ", "\"\<\\\"${postfixData}\\\"\>\"", 
+   " ", "\"\<\\\"${prefixDataPrediction}\\\"\>\"", " ", 
    "\"\<\\\"${mode}\\\"\>\"", " ", "\"\<${precomputedlambdas}\>\"", " ", 
    "\"\<${dist}\>\"", " ", "\"\<\\\"${cv}\\\"\>\"", " ", 
    "\"\<\\\"${cvprefix}\\\"\>\"", " ", "\"\<${output}\>\"", " ", 
@@ -509,7 +565,7 @@ Cell[BoxData[{
    "\"\<${varweight}\>\"", " ", "\"\<\\\"${grid}\\\"\>\"", " ", 
    "\"\<${gridselection}\>\"", " ", "\"\<${nlambda}\>\"", " ", 
    "\"\<${nlambdaminratio}\>\"", " ", "\"\<${nlambdapredidx}\>\"", " ", 
-   "\"\<${nodes}\>\""}]}], "\n", 
+   "\"\<${nodes}\>\"", " ", "\"\<\\\"${fldrData}\\\"\>\""}]}], "\n", 
  RowBox[{"\t\t  ", "done"}], "\n", 
  RowBox[{"\t\t ", "done"}], "\n", 
  RowBox[{"\t\t", "done"}], "\n", 
@@ -667,7 +723,10 @@ Cell[BoxData[{
    3.6166899289194794`*^9}, {3.616690096742424*^9, 3.616690112572076*^9}, 
    3.6166901677499456`*^9, {3.6166902135206795`*^9, 3.6166902229122868`*^9}, {
    3.616690260314719*^9, 3.6166902624398727`*^9}, {3.616690371473061*^9, 
-   3.6166903739577255`*^9}}],
+   3.6166903739577255`*^9}, 3.6167012793604107`*^9, {3.6167014584893513`*^9, 
+   3.6167014905870223`*^9}, {3.616701777693192*^9, 3.616701806493122*^9}, {
+   3.616701939790202*^9, 3.61670196313647*^9}, {3.6167020325714507`*^9, 
+   3.616702036618698*^9}, {3.6167021485713196`*^9, 3.616702158338005*^9}}],
 
 Cell[BoxData["\<\"Executed\"\>"], "Output",
  CellChangeTimes->{3.6019134116829224`*^9, 3.6166897861843386`*^9}]
@@ -803,36 +862,41 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 101, 1, 30, "Text"],
+Cell[558, 20, 324, 9, 30, "Text"],
 Cell[CellGroupData[{
-Cell[684, 25, 193, 4, 52, "Input"],
-Cell[880, 31, 83, 1, 31, "Output"]
+Cell[907, 33, 558, 11, 52, "Input"],
+Cell[1468, 46, 104, 1, 31, "Output"]
 }, {2}]],
-Cell[975, 35, 103, 1, 30, "Text"],
+Cell[1584, 50, 153, 2, 30, "Text"],
 Cell[CellGroupData[{
-Cell[1103, 40, 621, 13, 112, "Input"],
-Cell[1727, 55, 83, 1, 31, "Output"]
+Cell[1762, 56, 293, 7, 52, "Input"],
+Cell[2058, 65, 109, 1, 31, "Output"]
 }, {2}]],
-Cell[1822, 59, 159, 3, 30, "Text"],
+Cell[2179, 69, 103, 1, 30, "Text"],
 Cell[CellGroupData[{
-Cell[2006, 66, 13080, 246, 572, "Input"],
-Cell[15089, 314, 81, 1, 31, "Output"]
+Cell[2307, 74, 621, 13, 112, "Input"],
+Cell[2931, 89, 83, 1, 31, "Output"]
 }, {2}]],
-Cell[15182, 318, 124, 1, 30, "Text"],
+Cell[3026, 93, 159, 3, 30, "Text"],
 Cell[CellGroupData[{
-Cell[15331, 323, 5803, 95, 152, "Input"],
-Cell[21137, 420, 81, 1, 31, "Output"]
+Cell[3210, 100, 13080, 246, 572, "Input"],
+Cell[16293, 348, 81, 1, 31, "Output"]
 }, {2}]],
-Cell[21230, 424, 343, 6, 30, "Text"],
+Cell[16386, 352, 124, 1, 30, "Text"],
 Cell[CellGroupData[{
-Cell[21598, 434, 14155, 235, 773, "Code",
+Cell[16535, 357, 5803, 95, 152, "Input"],
+Cell[22341, 454, 81, 1, 31, "Output"]
+}, {2}]],
+Cell[22434, 458, 804, 16, 49, "Text"],
+Cell[CellGroupData[{
+Cell[23263, 478, 14923, 250, 853, "Code",
  InitializationCell->False],
-Cell[35756, 671, 111, 1, 31, "Output"]
+Cell[38189, 730, 111, 1, 31, "Output"]
 }, {2}]],
-Cell[35879, 675, 245, 7, 30, "Text"],
+Cell[38312, 734, 245, 7, 30, "Text"],
 Cell[CellGroupData[{
-Cell[36149, 686, 4962, 97, 192, "Input"],
-Cell[41114, 785, 81, 1, 31, "Output"]
+Cell[38582, 745, 4962, 97, 192, "Input"],
+Cell[43547, 844, 81, 1, 31, "Output"]
 }, {2}]]
 }
 ]
