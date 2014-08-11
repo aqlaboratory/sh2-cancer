@@ -67,7 +67,7 @@ FlattenUpperTriangularize[mat_]:=Module[
 
 
 (* ::Text:: *)
-(*Loads symbols into Mathematica contexts*)
+(*Symbol management functions.*)
 
 
 Attributes[LoadSymbol]={HoldRest};
@@ -89,3 +89,33 @@ LoadSymbol[fldr_String,symbol_Symbol,context_:Context[],OptionsPattern[]]:=With[
 LoadSymbol[fldr_String,symbols:{__Symbol},context_:Context[],opts:OptionsPattern[]]:=StringJoin[Riffle[
 	List@@(Function[symbol,LoadSymbol[fldr,symbol,context,opts],HoldFirst]/@ReplacePart[Unevaluated[symbols],0->Hold]),
 	"\n"]]
+
+
+Attributes[GenerateSymbol]={HoldRest};
+Options[GenerateSymbol]={IgnoredContexts->{"Global`"},Granularity->0};
+GenerateSymbol[fldr_,symbol_Symbol,OptionsPattern[]]:=With[
+	{path=If[MemberQ[OptionValue[IgnoredContexts],Context[symbol]],fldr,FileNameJoin[Prepend[StringSplit[Context[symbol],"`"],fldr]]]},
+	If[\[Not]DirectoryQ[path],CreateDirectory[path]];
+	Switch[OptionValue[Granularity],
+		0,Put[symbol,FileNameJoin[{path,SymbolName[Unevaluated[symbol]]}]],
+		1,CreateDirectory[FileNameJoin[{path,SymbolName[Unevaluated[symbol]]}]];
+	MapIndexed[Put[#1,FileNameJoin[{path,SymbolName[Unevaluated[symbol]],ToString[#2[[1]]]}]]&,symbol]];
+	"Generated "~~SymbolName[Unevaluated[symbol]]~~" at "~~path]
+GenerateSymbol[fldr_,symbols_List,opts:OptionsPattern[]]:=StringJoin[Riffle[
+	List@@(Function[symbol,GenerateSymbol[fldr,symbol,opts],HoldFirst]/@ReplacePart[Unevaluated[symbols],0->Hold]),
+	"\n"]]
+
+
+Options[SwitchContextA]={IgnoredContexts->{"Global`"}};
+SwitchContextA[context_,OptionsPattern[]]:=Module[{contextTreeOld,contextTreeNew},
+	{contextTreeOld,contextTreeNew}=StringSplit[#,"`"]&/@{Context[],context};
+	If[\[Not]MemberQ[OptionValue[IgnoredContexts],Context[]],
+	$ContextPath=DeleteCases[$ContextPath,str_/;StringMatchQ[str,StringExpression[First[contextTreeOld],"`",___]]]];
+	$ContextPath=Join[Rest[FoldList[StringJoin[#1,#2,"`"]&,"",contextTreeNew]],$ContextPath];
+	Quiet[FixedPoint[End[]&,Null],End::"noctx"];
+	Begin[context];
+	End[]]
+SwitchContextB[context_]:=Begin[context]
+
+
+ParentContext[]:=StringJoin[Riffle[Most[StringSplit[Context[],"`"]],"`",{2,-1,2}]]

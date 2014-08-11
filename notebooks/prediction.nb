@@ -1,0 +1,1139 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     50043,       1130]
+NotebookOptionsPosition[     48303,       1066]
+NotebookOutlinePosition[     48645,       1081]
+CellTagsIndexPosition[     48602,       1078]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[TextData[StyleBox["This notebook will guide you through the process of \
+using a trained MSM/D model to make protein-level and network-mutation level \
+predictions.",
+ FontWeight->"Bold"]], "Text",
+ CellChangeTimes->{{3.6167032942542725`*^9, 3.6167033276643486`*^9}, {
+  3.6167033967179317`*^9, 3.6167034179387445`*^9}, {3.616703500056797*^9, 
+  3.616703500384946*^9}}],
+
+Cell[TextData[{
+ StyleBox["Manually",
+  FontColor->RGBColor[1, 0, 0]],
+ " set root directory (where repository contents were unpacked) to ",
+ StyleBox["fldr",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ " symbol."
+}], "Text",
+ CellChangeTimes->{{3.61668374010996*^9, 3.6166837431708713`*^9}, {
+  3.6167016048177323`*^9, 3.616701676681406*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"fldr", "=", "\"\</sh2-cancer/\>\""}], ";"}], 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Set", " ", "to", " ", "correct", " ", "folder", " ", "where", " ", 
+    "repository", " ", "contents", " ", "were", " ", 
+    RowBox[{"unpacked", "."}]}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", "\"\<Done\>\""}], "Input",
+ CellChangeTimes->{{3.6166837447944145`*^9, 3.616683753518712*^9}, {
+  3.616701521793441*^9, 3.6167015227466335`*^9}, {3.6167016596639233`*^9, 
+  3.6167016650239654`*^9}, {3.6167020611214294`*^9, 3.616702074497651*^9}}],
+
+Cell[BoxData["\<\"Done\"\>"], "Output",
+ CellChangeTimes->{3.6166837537949743`*^9, 3.61670175928531*^9}]
+}, {2}]],
+
+Cell["Set other directories", "Text",
+ CellChangeTimes->{{3.616701689964105*^9, 3.61670169310511*^9}, {
+  3.6167017309856787`*^9, 3.616701736079791*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"fldrData", "=", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{"fldr", ",", "\"\<data\>\""}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fldrCode", "=", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{"fldr", ",", "\"\<code\>\""}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", "\"\<Done\>\""}], "Input",
+ CellChangeTimes->{{3.6167017371111145`*^9, 3.6167017536910667`*^9}, {
+  3.6167035214497128`*^9, 3.6167035240592723`*^9}, {3.6167109345997033`*^9, 
+  3.6167109400066147`*^9}}],
+
+Cell[BoxData["\<\"Done\"\>"], "Output",
+ CellChangeTimes->{{3.6167017541442213`*^9, 3.6167017609729295`*^9}, 
+   3.616710944757098*^9}]
+}, {2}]],
+
+Cell[TextData[{
+ "Load ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " packages"
+}], "Text",
+ CellChangeTimes->{{3.6167109511327467`*^9, 3.61671095696152*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Get", "[", 
+     RowBox[{"FileNameJoin", "[", 
+      RowBox[{"{", 
+       RowBox[{"fldrCode", ",", "#"}], "}"}], "]"}], "]"}], "&"}], "/@", 
+   RowBox[{"{", 
+    RowBox[{
+    "\"\<misc.wl\>\"", ",", "\"\<learning.wl\>\"", ",", 
+     "\"\<prediction.wl\>\""}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", "\"\<Loaded\>\""}], "Input",
+ CellChangeTimes->{{3.616710959039893*^9, 3.616711052706937*^9}, {
+  3.6167112381813717`*^9, 3.6167112510109158`*^9}}],
+
+Cell[BoxData["\<\"Loaded\"\>"], "Output",
+ CellChangeTimes->{3.6167110547853117`*^9}]
+}, {2}]],
+
+Cell[TextData[{
+ "Load needed symbols. They are:",
+ StyleBox["\n",
+  FontFamily->"Arial Narrow"],
+ StyleBox["matFourSourcesAveragedClosestPointContactMap",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ ": Average distances between residues in the SH2 domain and peptide derived \
+from representative structures.\n",
+ StyleBox["metadataSH2DomainsUniqueSeqHumanWTAndTumorVer3",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ ": Unique sequences of all SH2 domains in the human genome and mutated \
+COSMIC variants.",
+ StyleBox["\n",
+  FontSlant->"Italic"],
+ StyleBox["metadataPhosphositesUniqueSeqHumanWTAndTumorVer3",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ ": Unique sequences of all phosphosites in the human genome and mutated \
+COSMIC variants.\n",
+ StyleBox["metadataWithIdxGrpByGeneSH2DomainsHumanVer3",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ ": Metadata for all SH2 domain-containing proteins in the human genome.\n",
+ StyleBox["metadataWithIdxGrpByGenePhosphositesHumanVer3",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ ": Metadata for all phosphoproteins in the human genome.\n",
+ StyleBox["metadataAugmentedWithIdxSH2DomainsTumorMutantsVer3:",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ " Metadata for all SH2 domain mutations in COSMIC.\n",
+ StyleBox["metadataAugmentedWithIdxPhosphositesTumorMutantsVer3:",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ " Metadata for all phosphoprotein mutations in COSMIC.\n",
+ StyleBox["lblsTumorTypesFSORNCNDPFBASCPC",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ ": Labels for all tumor types."
+}], "Text",
+ CellChangeTimes->{{3.616684916530792*^9, 3.6166849189951363`*^9}, {
+  3.616703572720313*^9, 3.6167037256588287`*^9}, {3.6167037577242117`*^9, 
+  3.616703759364955*^9}, {3.6167037923855696`*^9, 3.616703794057564*^9}, {
+  3.616704962093155*^9, 3.6167050047081227`*^9}, {3.616706694379352*^9, 
+  3.616706756964135*^9}, {3.616707393216062*^9, 3.6167074304700727`*^9}, {
+  3.6167082501271353`*^9, 3.616708258674818*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"LoadSymbol", "[", 
+  RowBox[{"fldrData", ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+    "matFourSourcesAveragedClosestPointContactMap", ",", 
+     "\[IndentingNewLine]", "metadataSH2DomainsUniqueSeqHumanWTAndTumorVer3", 
+     ",", "\[IndentingNewLine]", 
+     "metadataPhosphositesUniqueSeqHumanWTAndTumorVer3", ",", 
+     "\[IndentingNewLine]", "metadataWithIdxGrpByGeneSH2DomainsHumanVer3", 
+     ",", "\[IndentingNewLine]", 
+     "metadataWithIdxGrpByGenePhosphositesHumanVer3", ",", 
+     "\[IndentingNewLine]", 
+     "metadataAugmentedWithIdxSH2DomainsTumorMutantsVer3", ",", 
+     "\[IndentingNewLine]", 
+     "metadataAugmentedWithIdxPhosphositesTumorMutantsVer3", ",", 
+     "\[IndentingNewLine]", "lblsTumorTypesFSORNCNDPFBASCPC"}], "}"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.6166849204935613`*^9, 3.6166849440803356`*^9}, {
+  3.616685185104393*^9, 3.616685185601866*^9}, {3.6167035601877127`*^9, 
+  3.6167035660321226`*^9}, {3.616706658860005*^9, 3.616706666345191*^9}, {
+  3.616707357914051*^9, 3.616707366650009*^9}, {3.616708245314193*^9, 
+  3.6167082459236145`*^9}}],
+
+Cell[BoxData["\<\"Loaded\"\>"], "Output",
+ CellChangeTimes->{3.616684980447925*^9}]
+}, {2}]],
+
+Cell["Generate input matrices for use in R.", "Text",
+ CellChangeTimes->{{3.616683617805634*^9, 3.6166836416743345`*^9}, 
+   3.616705080734353*^9, 3.616705198606522*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"fldrTopLevel", "=", "fldrData"}], ",", 
+      RowBox[{"prefix", "=", 
+       RowBox[{
+       "\"\<HumanWTAndTumorVer3\>\"", "~~", "\"\<FSORNCNDPFBASCPC\>\""}]}], 
+      ",", 
+      RowBox[{"distCutoff", "=", "15"}], ",", 
+      RowBox[{"matContacts", "=", 
+       RowBox[{
+       "matFourSourcesAveragedClosestPointContactMap", "\[LeftDoubleBracket]", 
+        RowBox[{"All", ",", 
+         RowBox[{"2", ";;", 
+          RowBox[{"-", "2"}]}]}], "\[RightDoubleBracket]"}]}], ",", 
+      RowBox[{
+      "mdSH2Domains", "=", "metadataSH2DomainsUniqueSeqHumanWTAndTumorVer3"}],
+       ",", 
+      RowBox[{"mdPeptides", "=", 
+       RowBox[{"StringTake", "[", 
+        RowBox[{"metadataPhosphositesUniqueSeqHumanWTAndTumorVer3", ",", 
+         RowBox[{"{", 
+          RowBox[{"2", ",", 
+           RowBox[{"-", "2"}]}], "}"}]}], "]"}]}], ",", 
+      RowBox[{"alphaIncludedDomain", "=", 
+       RowBox[{"DeleteCases", "[", 
+        RowBox[{"AlphaAAs", ",", "\"\<-\>\""}], "]"}]}], ",", 
+      RowBox[{"alphaIncludedPeptide", "=", 
+       RowBox[{"DeleteCases", "[", 
+        RowBox[{"AlphaAAs", ",", 
+         RowBox[{"\"\<-\>\"", "|", "\"\<C\>\""}]}], "]"}]}], ",", 
+      RowBox[{"alphaExcludedDomain", "=", 
+       RowBox[{"{", "\"\<-\>\"", "}"}]}], ",", 
+      RowBox[{"alphaExcludedPeptide", "=", 
+       RowBox[{"{", 
+        RowBox[{"\"\<-\>\"", ",", "\"\<C\>\""}], "}"}]}], ",", 
+      RowBox[{"divisionsize", "=", "13033"}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"With", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"pairs", "=", 
+         RowBox[{"Partition", "[", 
+          RowBox[{
+           RowBox[{"Tuples", "[", 
+            RowBox[{"{", 
+             RowBox[{"mdSH2Domains", ",", "mdPeptides"}], "}"}], "]"}], ",", 
+           "divisionsize"}], "]"}]}], ",", 
+        RowBox[{"pos", "=", 
+         RowBox[{"Position", "[", 
+          RowBox[{"matContacts", ",", 
+           RowBox[{"d_", "/;", 
+            RowBox[{"d", "<", "distCutoff"}]}], ",", "2"}], "]"}]}], ",", 
+        RowBox[{"fldr", "=", 
+         RowBox[{"FileNameJoin", "[", 
+          RowBox[{"{", 
+           RowBox[{"fldrTopLevel", ",", 
+            RowBox[{
+            "\"\<rMatInput\>\"", "~~", "prefix", "~~", "\"\<Dist\>\"", "~~", 
+             RowBox[{"ToString", "[", "distCutoff", "]"}]}]}], "}"}], 
+          "]"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"CreateDirectory", "[", "fldr", "]"}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Parallelize", "[", 
+        RowBox[{"MapIndexed", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"With", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"file", "=", 
+               RowBox[{"FileNameJoin", "[", 
+                RowBox[{"{", 
+                 RowBox[{"fldr", ",", 
+                  RowBox[{
+                   RowBox[{"ToString", "[", 
+                    RowBox[{
+                    "#2", "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}], "]"}], "~~", 
+                   "\"\<.rsa\>\""}]}], "}"}], "]"}]}], "}"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{"\[Not]", 
+                RowBox[{"FileExistsQ", "[", "file", "]"}]}], ",", 
+               RowBox[{"With", "[", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"matIFs", "=", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"SparseArray", "[", 
+                    RowBox[{"SequenceToPositionBasedFeatures", "[", 
+                    RowBox[{
+                    RowBox[{
+                    "#", "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}], ",", 
+                    RowBox[{
+                    "#", "\[LeftDoubleBracket]", "2", 
+                    "\[RightDoubleBracket]"}], ",", 
+                    RowBox[{"SecondOrder", "\[Rule]", "pos"}], ",", 
+                    RowBox[{"pY", "\[Rule]", "True"}], ",", 
+                    RowBox[{
+                    "IncludedResiduesDomain", "\[Rule]", 
+                    "alphaIncludedDomain"}], ",", 
+                    RowBox[{
+                    "IncludedResiduesPeptide", "\[Rule]", 
+                    "alphaIncludedPeptide"}], ",", 
+                    RowBox[{
+                    "ExcludedResiduesDomain", "\[Rule]", 
+                    "alphaExcludedDomain"}], ",", 
+                    RowBox[{
+                    "ExcludedResiduesPeptide", "\[Rule]", 
+                    "alphaExcludedPeptide"}]}], "]"}], "]"}], "&"}], "/@", 
+                    "#1"}]}], "}"}], ",", "\[IndentingNewLine]", 
+                 RowBox[{"Export", "[", 
+                  RowBox[{"file", ",", 
+                   RowBox[{"SetAccuracy", "[", 
+                    RowBox[{
+                    RowBox[{"SparseArray", "[", "matIFs", "]"}], ",", "5"}], 
+                    "]"}]}], "]"}]}], "]"}]}], "]"}]}], "]"}], "&"}], ",", 
+          "\[IndentingNewLine]", "pairs"}], "]"}], "]"}]}]}], "]"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", "\"\<Done\>\""}], "Input",
+ CellChangeTimes->{{3.602892118775313*^9, 3.6028921192909794`*^9}, {
+   3.6029394544349527`*^9, 3.602939455914364*^9}, {3.6029583415161695`*^9, 
+   3.602958347042434*^9}, {3.616705118504484*^9, 3.616705167415864*^9}, 
+   3.616705791661324*^9}],
+
+Cell[BoxData["\<\"Done\"\>"], "Output",
+ CellChangeTimes->{3.6167051210515413`*^9}]
+}, {2}]],
+
+Cell[TextData[{
+ "Execute bash script to predict MSM/D probabilities in R. ",
+ StyleBox["fldr",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ " environmental variable must be ",
+ StyleBox["manually",
+  FontColor->RGBColor[1, 0, 0]],
+ " set to root directory. (Note: Potentially computationally intensive; \
+recommended to be run on compute cluster. Insure that all necessary R \
+packages are installed.)"
+}], "Text",
+ CellChangeTimes->{{3.6166897616350307`*^9, 3.6166897716517067`*^9}, {
+  3.6166903237163243`*^9, 3.616690339672228*^9}, {3.616690565604146*^9, 
+  3.6166905669323664`*^9}, {3.6167012459344745`*^9, 3.6167012681402955`*^9}, {
+  3.61670152976296*^9, 3.61670154803048*^9}, {3.616701707061262*^9, 
+  3.616701708311482*^9}, {3.6167017754429216`*^9, 3.616701775739815*^9}, {
+  3.6167018175723557`*^9, 3.6167018191662226`*^9}, {3.6167057203720074`*^9, 
+  3.616705724263019*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"#", "!"}], "/", "bin"}], "/", "bash"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{"module", " ", "load", " ", 
+   RowBox[{
+    RowBox[{"stats", "/", "R"}], "/", "3.0"}], ".0"}], "\n"}], "\n", 
+ RowBox[{"fldr", "=", 
+  RowBox[{
+   RowBox[{
+   "\"\</sh2-cancer/\>\"", " ", "#Set", " ", "to", " ", "correct", " ", 
+    "folder", " ", "where", " ", "repository", " ", "contents", " ", "were", 
+    " ", 
+    RowBox[{"unpacked", ".", "\n", "fldrData"}]}], "=", 
+   RowBox[{"$", 
+    RowBox[{"{", "fldr", "}"}], "\"\<data/\>\""}]}]}], "\n", 
+ RowBox[{
+  RowBox[{"fldrCode", "=", 
+   RowBox[{"$", 
+    RowBox[{"{", "fldr", "}"}], "\"\<code/\>\""}]}], "\n"}], "\n", 
+ RowBox[{"nodes", "=", "1"}], "\n", 
+ RowBox[{"prefixData", "=", "\"\<PNRFSA\>\""}], "\n", 
+ RowBox[{"infixData", "=", "\"\<FSORNCNDPFBASCPC\>\""}], "\n", 
+ RowBox[{"postfixData", "=", "\"\<Set1\>\""}], "\n", 
+ RowBox[{"prefixDataPrediction", "=", "\"\<HumanWTAndTumorVer3\>\""}], "\n", 
+ RowBox[{"mode", "=", "\"\<Prediction\>\""}], "\n", 
+ RowBox[{"precomputedlambdas", "=", "\"\<TRUE\>\""}], "\n", 
+ RowBox[{"nlambda", "=", "\"\<200\>\""}], "\n", 
+ RowBox[{"nlambdaminratio", "=", "\"\<0.000001\>\""}], "\n", 
+ RowBox[{"nlambdapredidx", "=", "\"\<144\>\""}], "\n", 
+ RowBox[{
+  RowBox[{"grid", "=", "\"\<as.matrix(rbind(c(1,1,0.9)))\>\""}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{"for", " ", "dist", " ", "in", " ", "15"}], ";", " ", "do"}], "\n", 
+ RowBox[{" ", 
+  RowBox[{
+   RowBox[{"for", " ", "cv", " ", "in", " ", "\"\<AllRandom\>\""}], ";", " ", 
+   "do"}]}], "\n", 
+ RowBox[{"  ", 
+  RowBox[{
+   RowBox[{"for", " ", "cvprefix", " ", "in", " ", "\"\<NoNegOne\>\""}], ";", 
+   " ", "do"}]}], "\n", 
+ RowBox[{"   ", 
+  RowBox[{
+   RowBox[{"for", " ", "output", " ", "in", " ", "1"}], ";", " ", 
+   "do"}]}], "\n", 
+ RowBox[{"    ", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"for", " ", "lvl1cv", " ", "in"}], " ", "-", "1"}], ";", " ", 
+   "do"}]}], "\n", 
+ RowBox[{" \t", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"for", " ", "lvl2cv", " ", "in"}], " ", "-", "1"}], ";", " ", 
+   "do"}]}], "\n", 
+ RowBox[{"\t  ", 
+  RowBox[{
+   RowBox[{"for", " ", "predset", " ", "in", " ", "\"\<1:4695\>\""}], ";", 
+   " ", "do"}]}], "\n", 
+ RowBox[{"\t   ", 
+  RowBox[{
+   RowBox[{"for", " ", "chunks", " ", "in", " ", "1"}], ";", " ", 
+   "do"}]}], "\n", 
+ RowBox[{" \t   ", 
+  RowBox[{
+   RowBox[{"for", " ", "intercept", " ", "in", " ", "\"\<TRUE\>\""}], ";", 
+   " ", "do"}], " "}], "\n", 
+ RowBox[{" \t    ", 
+  RowBox[{
+   RowBox[{"for", " ", "varweight", " ", "in", " ", "\"\<FALSE\>\""}], ";", 
+   " ", "do"}]}], "\n", 
+ RowBox[{" \t     ", 
+  RowBox[{
+   RowBox[{"for", " ", "gridselection", " ", "in", " ", "1"}], ";", " ", 
+   "do"}]}], "\n", 
+ RowBox[{" \t\t  ", 
+  RowBox[{"Rscript", " ", "$", 
+   RowBox[{"{", "fldrCode", "}"}], 
+   RowBox[{"learning", ".", "R"}], " ", "\"\<\\\"${prefixData}\\\"\>\"", " ", 
+   "\"\<\\\"${infixData}\\\"\>\"", " ", "\"\<\\\"${postfixData}\\\"\>\"", 
+   " ", "\"\<\\\"${prefixDataPrediction}\\\"\>\"", " ", 
+   "\"\<\\\"${mode}\\\"\>\"", " ", "\"\<${precomputedlambdas}\>\"", " ", 
+   "\"\<${dist}\>\"", " ", "\"\<\\\"${cv}\\\"\>\"", " ", 
+   "\"\<\\\"${cvprefix}\\\"\>\"", " ", "\"\<${output}\>\"", " ", 
+   "\"\<${lvl1cv}\>\"", " ", "\"\<${lvl2cv}\>\"", " ", "\"\<${predset}\>\"", 
+   " ", "\"\<${chunks}\>\"", " ", "\"\<${intercept}\>\"", " ", 
+   "\"\<${varweight}\>\"", " ", "\"\<\\\"${grid}\\\"\>\"", " ", 
+   "\"\<${gridselection}\>\"", " ", "\"\<${nlambda}\>\"", " ", 
+   "\"\<${nlambdaminratio}\>\"", " ", "\"\<${nlambdapredidx}\>\"", " ", 
+   "\"\<${nodes}\>\"", " ", "\"\<\\\"${fldrData}\\\"\>\""}]}], "\n", 
+ RowBox[{"\t\t  ", "done"}], "\n", 
+ RowBox[{"\t\t ", "done"}], "\n", 
+ RowBox[{"\t\t", "done"}], "\n", 
+ RowBox[{"\t   ", "done"}], "\n", 
+ RowBox[{"\t  ", "done"}], "\n", 
+ RowBox[{"\t ", "done"}], "\n", 
+ RowBox[{"\t", "done"}], "\n", 
+ RowBox[{"   ", "done"}], "\n", 
+ RowBox[{"  ", "done"}], "\n", 
+ RowBox[{" ", "done"}], "\n", 
+ RowBox[{"done", "  "}]}], "Code",
+ InitializationCell->False,
+ CellChangeTimes->{
+  3.537214553615477*^9, {3.537214595115851*^9, 3.537214596273917*^9}, 
+   3.53721497064333*^9, {3.53721724263628*^9, 3.537217242824291*^9}, 
+   3.537239256542404*^9, 3.537239628616685*^9, {3.5372399854560957`*^9, 
+   3.537239986335146*^9}, {3.5375586970031304`*^9, 3.5375586973231487`*^9}, {
+   3.537559077178875*^9, 3.5375590838702583`*^9}, {3.5375591371813073`*^9, 
+   3.5375591836589656`*^9}, 3.5375596534418354`*^9, 3.5375604500573997`*^9, {
+   3.5376298972040386`*^9, 3.5376298972230396`*^9}, {3.537634433611506*^9, 
+   3.5376344336375074`*^9}, {3.537634469396553*^9, 3.5376344696005645`*^9}, {
+   3.5376345838620996`*^9, 3.53763458472915*^9}, {3.5376372250241656`*^9, 
+   3.537637239295982*^9}, {3.537637299192408*^9, 3.537637405480487*^9}, {
+   3.5376374374803176`*^9, 3.5376374895992985`*^9}, {3.537637535224908*^9, 
+   3.5376375403292003`*^9}, {3.537637594088275*^9, 3.5376376586139655`*^9}, {
+   3.537637690791806*^9, 3.5376377940867147`*^9}, {3.538773748501616*^9, 
+   3.53877375451396*^9}, {3.5387739498961353`*^9, 3.538773950522171*^9}, {
+   3.538773983457055*^9, 3.5387740126317234`*^9}, {3.5389292691576195`*^9, 
+   3.5389292975496693`*^9}, {3.539293974520624*^9, 3.539293974661024*^9}, {
+   3.539294084198024*^9, 3.539294086139428*^9}, {3.539359866896013*^9, 
+   3.53935990520968*^9}, {3.5395273450438304`*^9, 3.5395273451998305`*^9}, {
+   3.539527405348528*^9, 3.5395274055981283`*^9}, {3.5424146298386717`*^9, 
+   3.542414638947193*^9}, 3.5424616170500574`*^9, {3.542461848435173*^9, 
+   3.542461851043378*^9}, {3.545054163407441*^9, 3.545054188722889*^9}, {
+   3.54505425972795*^9, 3.5450542904057045`*^9}, 3.5450544432604475`*^9, {
+   3.56131539800858*^9, 3.561315449270117*^9}, {3.5613158032822633`*^9, 
+   3.5613158034562855`*^9}, {3.5618497898660827`*^9, 3.561849790023102*^9}, {
+   3.563836565824712*^9, 3.563836591728015*^9}, {3.5653534781786337`*^9, 
+   3.5653534782410345`*^9}, 3.5653536415210114`*^9, {3.5666464776035366`*^9, 
+   3.566646479294355*^9}, {3.5928615543172483`*^9, 3.592861593919598*^9}, {
+   3.592861861558495*^9, 3.5928619033626356`*^9}, {3.59286196290261*^9, 
+   3.5928619692453613`*^9}, {3.5928620028413124`*^9, 
+   3.5928620281497564`*^9}, {3.5928685859472284`*^9, 3.592868599243154*^9}, {
+   3.592869302382321*^9, 3.5928694153741865`*^9}, {3.592869542596611*^9, 
+   3.5928695454945145`*^9}, {3.5928699771424885`*^9, 
+   3.5928701163560095`*^9}, {3.5928701680666504`*^9, 3.592870243814892*^9}, {
+   3.592870282056675*^9, 3.5928702906858582`*^9}, {3.59287040416159*^9, 
+   3.592870505751789*^9}, {3.5929463551632676`*^9, 3.59294643214771*^9}, {
+   3.593190540793373*^9, 3.593190600433544*^9}, {3.593190641535048*^9, 
+   3.593190644379006*^9}, {3.593190679032857*^9, 3.593190723304124*^9}, {
+   3.5931908467690554`*^9, 3.5931908622233076`*^9}, {3.5931909693507357`*^9, 
+   3.593191046464634*^9}, {3.59321049391267*^9, 3.5932105122554636`*^9}, {
+   3.5932106001689477`*^9, 3.5932106018616533`*^9}, {3.5932106751978865`*^9, 
+   3.5932108367383604`*^9}, {3.593210967722492*^9, 3.593211045898735*^9}, {
+   3.5932135155258117`*^9, 3.5932135582636423`*^9}, {3.593213654814946*^9, 
+   3.593213800303253*^9}, {3.5932138736969824`*^9, 3.593213887901355*^9}, {
+   3.593213954088632*^9, 3.593213968198428*^9}, {3.5932672616454687`*^9, 
+   3.593267297899086*^9}, {3.593267340241522*^9, 3.5932673787422867`*^9}, {
+   3.593267533937626*^9, 3.5932675349383054`*^9}, {3.5932677688362455`*^9, 
+   3.593267851529851*^9}, {3.5932680951001606`*^9, 3.5932680984761806`*^9}, {
+   3.5932682146190367`*^9, 3.593268262739024*^9}, {3.5932683335520864`*^9, 
+   3.5932683554294744`*^9}, 3.5932684067226033`*^9, {3.5932823254640656`*^9, 
+   3.59328233498748*^9}, {3.593293753793527*^9, 3.5932938842052727`*^9}, {
+   3.5932939147605314`*^9, 3.593293939410692*^9}, {3.59329397577094*^9, 
+   3.5932940543683834`*^9}, {3.593294094062111*^9, 3.59329409950002*^9}, {
+   3.593294182379959*^9, 3.5932941852084956`*^9}, {3.5932942173271008`*^9, 
+   3.5932942531728735`*^9}, 3.5933016354140425`*^9, 3.593341768530216*^9, {
+   3.5933418524327335`*^9, 3.5933418527300196`*^9}, {3.5933422913457413`*^9, 
+   3.593342318677763*^9}, 3.5933423586973405`*^9, {3.5933589532118406`*^9, 
+   3.5933589552588625`*^9}, {3.593364431528453*^9, 3.5933644330482388`*^9}, {
+   3.5933648109298334`*^9, 3.593364811937795*^9}, {3.5933705260215297`*^9, 
+   3.593370531221571*^9}, {3.5933707829796357`*^9, 3.59337085221863*^9}, {
+   3.593370975769277*^9, 3.593371049059707*^9}, {3.593371091946333*^9, 
+   3.5933712932149925`*^9}, {3.593780147279165*^9, 3.5937801517483377`*^9}, {
+   3.593780278814123*^9, 3.5937802807517605`*^9}, {3.5937805034181447`*^9, 
+   3.5937805689771986`*^9}, {3.5937815207177505`*^9, 
+   3.5937815303125196`*^9}, {3.593781614896077*^9, 3.5937817721209955`*^9}, {
+   3.593782042177019*^9, 3.5937820528031263`*^9}, {3.593782333907153*^9, 
+   3.593782354461903*^9}, {3.593782856831827*^9, 3.593782912817055*^9}, {
+   3.5937862291191416`*^9, 3.593786232510988*^9}, {3.5937862669699593`*^9, 
+   3.5937862872135935`*^9}, {3.593786349313732*^9, 3.5937863507212706`*^9}, {
+   3.5937863887329564`*^9, 3.5937864255957623`*^9}, {3.593786457926697*^9, 
+   3.593786640632837*^9}, {3.593793167088247*^9, 3.5937932318855143`*^9}, {
+   3.5937933090893755`*^9, 3.593793329712121*^9}, {3.5937933959732976`*^9, 
+   3.5937934788835344`*^9}, 3.593793661526273*^9, {3.593793699465478*^9, 
+   3.593793725789179*^9}, {3.593793812900052*^9, 3.593793877618389*^9}, {
+   3.593793964541884*^9, 3.593794031771307*^9}, {3.593794068589266*^9, 
+   3.5937940705876045`*^9}, 3.59379545413081*^9, 3.5937979313556952`*^9, 
+   3.5937984164971895`*^9, {3.5937987856638737`*^9, 3.593798788180975*^9}, 
+   3.593800623546874*^9, 3.5938102849124064`*^9, 3.5938103197149506`*^9, {
+   3.5938103638444433`*^9, 3.5938103643757353`*^9}, {3.5938104377752123`*^9, 
+   3.5938104392379417`*^9}, {3.593810488529045*^9, 3.593810490966832*^9}, {
+   3.5938116219724665`*^9, 3.5938116352134132`*^9}, {3.5938147461809945`*^9, 
+   3.593814769396807*^9}, {3.593814853532323*^9, 3.5938148986467605`*^9}, {
+   3.5938155721271505`*^9, 3.5938156141447744`*^9}, {3.5938177040571575`*^9, 
+   3.5938177788111343`*^9}, {3.5938178091664886`*^9, 3.593817848615263*^9}, {
+   3.5938650744327393`*^9, 3.5938651020344696`*^9}, {3.5938651352568483`*^9, 
+   3.593865185120159*^9}, {3.593865222358892*^9, 3.593865264328727*^9}, {
+   3.5938652988514137`*^9, 3.5938652997729616`*^9}, {3.593867162828945*^9, 
+   3.5938671638915167`*^9}, {3.5938674178140416`*^9, 
+   3.5938674187062435`*^9}, {3.593873905612504*^9, 3.593873906675147*^9}, {
+   3.5938826577363563`*^9, 3.5938826583145247`*^9}, {3.5938838125585613`*^9, 
+   3.5938838231390934`*^9}, {3.593884070450811*^9, 3.5938840770794444`*^9}, {
+   3.5938899468425937`*^9, 3.5938899469845886`*^9}, {3.593890063111514*^9, 
+   3.5938900862429676`*^9}, {3.59389012637846*^9, 3.593890138881009*^9}, {
+   3.5938901741006994`*^9, 3.59389020689413*^9}, {3.593890738702047*^9, 
+   3.5938908932071342`*^9}, {3.593891017107091*^9, 3.59389106224208*^9}, {
+   3.593891105392462*^9, 3.593891171517318*^9}, {3.5938915912316093`*^9, 
+   3.593891642162401*^9}, {3.593891681469059*^9, 3.593891714473172*^9}, 
+   3.593891779406389*^9, {3.593892470181893*^9, 3.5938924832615056`*^9}, {
+   3.593892537470689*^9, 3.593892540861751*^9}, {3.5938945496878304`*^9, 
+   3.5938945547197647`*^9}, {3.5938946554520845`*^9, 
+   3.5938946676253543`*^9}, {3.5938947606701236`*^9, 
+   3.5938947643112087`*^9}, {3.593894798414291*^9, 3.5938948582814493`*^9}, {
+   3.5938954507993393`*^9, 3.5938954776944036`*^9}, {3.5938962846387367`*^9, 
+   3.5938963469042387`*^9}, {3.593896384209114*^9, 3.593896427159552*^9}, {
+   3.5939075590600295`*^9, 3.593907566377189*^9}, {3.5939079908900647`*^9, 
+   3.593908004940555*^9}, {3.5939080417049866`*^9, 3.593908045283471*^9}, {
+   3.5939082751548615`*^9, 3.593908283250554*^9}, {3.5939083147922096`*^9, 
+   3.5939083385934362`*^9}, {3.5939083742917404`*^9, 3.593908390904252*^9}, {
+   3.5939089988768187`*^9, 3.5939090795622063`*^9}, {3.5939091334145017`*^9, 
+   3.59390913374265*^9}, {3.5939091797493324`*^9, 3.593909323246521*^9}, 
+   3.593911195217198*^9, {3.5939116899551945`*^9, 3.5939116905646124`*^9}, {
+   3.5939847999245825`*^9, 3.593984803331235*^9}, {3.593985293092003*^9, 
+   3.59398535662409*^9}, {3.593988741535966*^9, 3.5939888258744946`*^9}, {
+   3.5939889249145384`*^9, 3.5939889310882564`*^9}, {3.5939955738871145`*^9, 
+   3.593995663699691*^9}, {3.593995706137636*^9, 3.5939957094507537`*^9}, {
+   3.594036605499155*^9, 3.594036607108759*^9}, {3.596369333561591*^9, 
+   3.5963693566292477`*^9}, {3.5963701282970967`*^9, 
+   3.5963701920751486`*^9}, {3.5963763757933726`*^9, 
+   3.5963764355254364`*^9}, {3.5963771234537625`*^9, 
+   3.5963771238757725`*^9}, {3.5963802442403116`*^9, 3.596380320424218*^9}, {
+   3.596382752351136*^9, 3.5963827649178247`*^9}, {3.5963834485947437`*^9, 
+   3.5963834723039007`*^9}, {3.5963844804424467`*^9, 
+   3.5963844807862196`*^9}, {3.5967579011981077`*^9, 3.596757904261091*^9}, {
+   3.5971892308929095`*^9, 3.597189288766118*^9}, {3.5998480564560623`*^9, 
+   3.599848135197772*^9}, {3.5998481854978576`*^9, 3.5998483195720053`*^9}, {
+   3.5998483587585106`*^9, 3.599848361430869*^9}, {3.5998493072630906`*^9, 
+   3.599849434348357*^9}, {3.5998495060996523`*^9, 3.5998495315274734`*^9}, {
+   3.599856426544349*^9, 3.5998564286539373`*^9}, {3.5999223116480827`*^9, 
+   3.599922339294809*^9}, {3.599922409559491*^9, 3.5999224158415203`*^9}, {
+   3.6000056895136423`*^9, 3.600005810455819*^9}, {3.600006019178808*^9, 
+   3.600006019804017*^9}, {3.6024159591879396`*^9, 3.6024159611102953`*^9}, {
+   3.602416027572673*^9, 3.6024160277289333`*^9}, {3.602416065783435*^9, 
+   3.602416066080331*^9}, {3.602416122086832*^9, 3.602416123602562*^9}, {
+   3.602423495857257*^9, 3.602423517002845*^9}, {3.602423744522318*^9, 
+   3.60242375094571*^9}, {3.6024293333005066`*^9, 3.6024293413021097`*^9}, {
+   3.6029452333411803`*^9, 3.6029453180196843`*^9}, 3.602945351550167*^9, {
+   3.602945384403612*^9, 3.6029454042775497`*^9}, {3.602945456243557*^9, 
+   3.6029455074087763`*^9}, {3.602945722643885*^9, 3.602945744228922*^9}, {
+   3.602945782046876*^9, 3.6029457925792255`*^9}, {3.602945945210101*^9, 
+   3.602945952321794*^9}, {3.6029460399421897`*^9, 3.60294609065019*^9}, {
+   3.602946122937518*^9, 3.6029461393840404`*^9}, {3.602953681439475*^9, 
+   3.602953681815832*^9}, {3.602961955646924*^9, 3.602961966825575*^9}, {
+   3.602962161385605*^9, 3.6029621791595774`*^9}, {3.604097546187992*^9, 
+   3.6040975462817535`*^9}, {3.60431152102878*^9, 3.604311531546564*^9}, {
+   3.6167058099444966`*^9, 3.616705840713485*^9}, {3.6167063003320255`*^9, 
+   3.616706316880855*^9}, {3.616706361511237*^9, 3.616706380342908*^9}}],
+
+Cell[BoxData["\<\"Executed\"\>"], "Output",
+ CellChangeTimes->{3.6019134116829224`*^9, 3.6166897861843386`*^9}]
+}, {2}]],
+
+Cell[TextData[{
+ "Load MSM/D predictions into ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.616706500263215*^9, 3.6167065090610714`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "rResPredHumanWTAndTumorVer3FirstAndSecondOrderResiduesNoCNoDashPositionsFil\
+teredByAvgStructuralCPCutoffsDist15", "=", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"fldrTopLevel", "=", "fldrData"}], ",", 
+       RowBox[{"prefix", "=", 
+        RowBox[{
+        "\"\<HumanWTAndTumorVer3\>\"", "~~", "\"\<FSORNCNDPFBASCPC\>\""}]}], 
+       ",", 
+       RowBox[{"distCutoff", "=", "15"}]}], "}"}], ",", 
+     RowBox[{"With", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"fldr", "=", 
+         RowBox[{"FileNameJoin", "[", 
+          RowBox[{"{", 
+           RowBox[{"fldrTopLevel", ",", 
+            RowBox[{
+            "\"\<rResPred\>\"", "~~", "prefix", "~~", "\"\<Dist\>\"", "~~", 
+             RowBox[{"ToString", "[", "distCutoff", "]"}]}]}], "}"}], "]"}]}],
+         "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Flatten", "[", 
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{"Import", "[", 
+           RowBox[{
+            RowBox[{"FileNameJoin", "[", 
+             RowBox[{"{", 
+              RowBox[{"fldr", ",", 
+               RowBox[{"ToString", "[", "div", "]"}]}], "}"}], "]"}], ",", 
+            "\"\<Table\>\""}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"div", ",", 
+            RowBox[{"Length", "[", 
+             RowBox[{"FileNames", "[", 
+              RowBox[{"\"\<*\>\"", ",", "fldr"}], "]"}], "]"}]}], "}"}]}], 
+         "]"}], "]"}]}], "]"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "matResPredHumanWTAndTumorVer3FirstAndSecondOrderResiduesNoCNoDashPositionsF\
+ilteredByAvgStructuralCPCutoffsDist15", "=", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+    "rResPredHumanWTAndTumorVer3FirstAndSecondOrderResiduesNoCNoDashPositionsF\
+ilteredByAvgStructuralCPCutoffsDist15", ",", 
+     RowBox[{
+     "Length", "[", "metadataPhosphositesUniqueSeqHumanWTAndTumorVer3", 
+      "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", "\"\<Loaded\>\""}], "Input",
+ CellChangeTimes->{
+  3.5677842516453633`*^9, {3.5677842827072906`*^9, 3.567784381731811*^9}, {
+   3.567784489333417*^9, 3.5677845145546064`*^9}, {3.5677845725599403`*^9, 
+   3.5677846135961285`*^9}, {3.5677846920470486`*^9, 3.567784729292757*^9}, {
+   3.5677847642481775`*^9, 3.5677848189910984`*^9}, 3.5677848638897753`*^9, {
+   3.5677852377640495`*^9, 3.5677852565934305`*^9}, {3.567785310578257*^9, 
+   3.5677853262132325`*^9}, 3.5677892602756605`*^9, {3.56779101119905*^9, 
+   3.5677910161256723`*^9}, {3.5953295356622133`*^9, 3.595329546180266*^9}, {
+   3.5953297198267756`*^9, 3.595329824937729*^9}, {3.595360251316598*^9, 
+   3.595360257520318*^9}, {3.6030215322906704`*^9, 3.6030215670309334`*^9}, {
+   3.616706524422864*^9, 3.61670654411357*^9}, {3.616706580101591*^9, 
+   3.6167065872429914`*^9}}],
+
+Cell[BoxData["\<\"Loaded\"\>"], "Output",
+ CellChangeTimes->{3.5953599450340185`*^9, 3.5953605021886344`*^9, 
+  3.6030221623583555`*^9, 3.603796243807757*^9, 3.604406210487543*^9, 
+  3.6167065320183735`*^9}]
+}, {2}]],
+
+Cell["\<\
+Generate MSM/P predictions for the wild-type human SH2-phosphoprotein \
+network. (Note: Potentially computationally intensive; recommended to be run \
+on compute cluster.)\
+\>", "Text",
+ CellChangeTimes->{{3.616706616527484*^9, 3.6167066349356775`*^9}, {
+  3.616706796656376*^9, 3.6167068005636964`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "matProbProteinInteractHumanWTFilteredByRef2FirstAndSecondOrderResiduesNoCNo\
+DashPositionsFilteredByAvgStructuralCPCutoffsDist15", "=", 
+   RowBox[{"With", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"datSH2", "=", "metadataWithIdxGrpByGeneSH2DomainsHumanVer3"}],
+        ",", 
+       RowBox[{"datPhosphosites", "=", 
+        RowBox[{"DeleteCases", "[", 
+         RowBox[{
+          RowBox[{"DeleteCases", "[", 
+           RowBox[{"metadataWithIdxGrpByGenePhosphositesHumanVer3", ",", 
+            RowBox[{"{", 
+             RowBox[{"_", ",", "_", ",", "_", ",", "_", ",", "_", ",", 
+              RowBox[{"0", "|", "1"}], ",", "_"}], "}"}], ",", 
+            RowBox[{"{", "2", "}"}]}], "]"}], ",", 
+          RowBox[{"{", "}"}]}], "]"}]}], ",", 
+       RowBox[{
+       "probs", "=", 
+        "matResPredHumanWTAndTumorVer3FirstAndSecondOrderResiduesNoCNoDashPosi\
+tionsFilteredByAvgStructuralCPCutoffsDist15"}]}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"DirectedInteractionProbabilities", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"datSH2", ",", "datPhosphosites"}], "}"}], ",", "probs", ",", 
+       RowBox[{"Model", "\[Rule]", "\"\<V2\>\""}]}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"GenerateSymbol", "[", 
+   RowBox[{
+   "fldrData", ",", 
+    "matProbProteinInteractHumanWTFilteredByRef2FirstAndSecondOrderResiduesNoC\
+NoDashPositionsFilteredByAvgStructuralCPCutoffsDist15"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", "\"\<Done\>\""}], "Input",
+ CellChangeTimes->{{3.5679572127512407`*^9, 3.5679573319863167`*^9}, {
+   3.5679575789955487`*^9, 3.5679575800546827`*^9}, {3.567958295034086*^9, 
+   3.567958361452483*^9}, {3.5679583916352997`*^9, 3.5679583934235263`*^9}, {
+   3.5679591679354563`*^9, 3.567959200421564*^9}, {3.5679594275962877`*^9, 
+   3.5679594609085*^9}, 3.567985058901141*^9, {3.5680480950985146`*^9, 
+   3.568048099214034*^9}, {3.5680553788254776`*^9, 3.568055382577952*^9}, {
+   3.603207507403411*^9, 3.603207513841581*^9}, {3.6032075544796934`*^9, 
+   3.603207588126212*^9}, {3.603207823585638*^9, 3.6032078428689394`*^9}, 
+   3.603207917078648*^9, {3.603208067771204*^9, 3.6032080711153083`*^9}, {
+   3.6039027986063447`*^9, 3.6039027987938576`*^9}, {3.6167067901238155`*^9, 
+   3.616706809939724*^9}, {3.616711512299779*^9, 3.6167115171758723`*^9}, 
+   3.6167115700456095`*^9}],
+
+Cell[BoxData["\<\"Done\"\>"], "Output",
+ CellChangeTimes->{3.616706811987248*^9}]
+}, {2}]],
+
+Cell["\<\
+Generate MSM/N predictions for all mutations in COSMIC. (Note: Potentially \
+computationally intensive; recommended to be run on compute cluster.)\
+\>", "Text",
+ CellChangeTimes->{{3.616706616527484*^9, 3.6167066349356775`*^9}, {
+  3.616706796656376*^9, 3.6167068005636964`*^9}, {3.616707322424743*^9, 
+  3.616707331832052*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "matStructuredSystemAndModelPosteriorProteinInteractTumorMutantsVer3Filtered\
+ByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvgStructura\
+lCPCutoffsDist15", "=", 
+   RowBox[{"Block", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{
+       "datSH2WT", "=", "metadataWithIdxGrpByGeneSH2DomainsHumanVer3"}], ",", 
+       RowBox[{"datPhosphositesWT", "=", 
+        RowBox[{"DeleteCases", "[", 
+         RowBox[{
+          RowBox[{"DeleteCases", "[", 
+           RowBox[{"metadataWithIdxGrpByGenePhosphositesHumanVer3", ",", 
+            RowBox[{"{", 
+             RowBox[{"_", ",", "_", ",", "_", ",", "_", ",", "_", ",", 
+              RowBox[{"0", "|", "1"}], ",", "_"}], "}"}], ",", 
+            RowBox[{"{", "2", "}"}]}], "]"}], ",", 
+          RowBox[{"{", "}"}]}], "]"}]}], ",", 
+       RowBox[{"datSH2Mut", "=", 
+        RowBox[{"DeleteCases", "[", 
+         RowBox[{"metadataAugmentedWithIdxSH2DomainsTumorMutantsVer3", ",", 
+          RowBox[{"{", 
+           RowBox[{"__", ",", "\"\<n\>\""}], "}"}]}], "]"}]}], ",", 
+       RowBox[{"datPhosphositesMut", "=", 
+        RowBox[{"DeleteCases", "[", 
+         RowBox[{"metadataAugmentedWithIdxPhosphositesTumorMutantsVer3", ",", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"0", ",", "__"}], "}"}], "|", 
+           RowBox[{"{", 
+            RowBox[{"__", ",", "\"\<n\>\""}], "}"}], "|", 
+           RowBox[{"{", 
+            RowBox[{"_", ",", "_", ",", "_", ",", "_", ",", "_", ",", 
+             RowBox[{"0", "|", "1"}], ",", "__"}], "}"}]}]}], "]"}]}], ",", 
+       RowBox[{
+       "probs", "=", 
+        "matResPredHumanWTAndTumorVer3FirstAndSecondOrderResiduesNoCNoDashPosi\
+tionsFilteredByAvgStructuralCPCutoffsDist15"}]}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"DirectedPerturbationProbabilities", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"datSH2WT", ",", "datPhosphositesWT"}], "}"}], ",", "probs",
+          ",", "datSH2Mut", ",", 
+         RowBox[{"ModelPosterior", "\[Rule]", "True"}], ",", 
+         RowBox[{"SystemPosterior", "\[Rule]", "True"}], ",", 
+         RowBox[{"Model", "\[Rule]", "\"\<V2\>\""}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Transpose", "[", 
+        RowBox[{
+         RowBox[{"DirectedPerturbationProbabilities", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"datPhosphositesWT", ",", "datSH2WT"}], "}"}], ",", 
+           RowBox[{"Transpose", "[", "probs", "]"}], ",", 
+           "datPhosphositesMut", ",", 
+           RowBox[{"ModelPosterior", "\[Rule]", "True"}], ",", 
+           RowBox[{"SystemPosterior", "\[Rule]", "True"}], ",", 
+           RowBox[{"Model", "\[Rule]", "\"\<V2\>\""}]}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"1", ",", "3", ",", "2"}], "}"}]}], "]"}]}], "}"}]}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "matSystemAndModelPosteriorProteinInteractTumorMutantsVer3FilteredByRef2AndH\
+TFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvgStructuralCPCutoffs\
+Dist15", "=", 
+   RowBox[{"SparseArray", "[", 
+    RowBox[{"Mean", "[", 
+     RowBox[{
+     "Join", "@@", 
+      "matStructuredSystemAndModelPosteriorProteinInteractTumorMutantsVer3Filt\
+eredByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvgStruc\
+turalCPCutoffsDist15"}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "matStructuredTypelessSystemAndModelPosteriorProteinInteractTumorMutantsVer3\
+FilteredByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvgS\
+tructuralCPCutoffsDist15", "=", 
+   RowBox[{"SparseArray", "[", 
+    RowBox[{"Total", "[", 
+     RowBox[{
+      RowBox[{
+      "Join", "@@", 
+       "matStructuredSystemAndModelPosteriorProteinInteractTumorMutantsVer3Fil\
+teredByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvgStru\
+cturalCPCutoffsDist15"}], ",", 
+      RowBox[{"{", "4", "}"}]}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "matTypelessSystemAndModelPosteriorProteinInteractTumorMutantsVer3FilteredBy\
+Ref2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvgStructuralC\
+PCutoffsDist15", "=", 
+   RowBox[{"SparseArray", "[", 
+    RowBox[{
+    "Mean", "[", 
+     "matStructuredTypelessSystemAndModelPosteriorProteinInteractTumorMutantsV\
+er3FilteredByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByA\
+vgStructuralCPCutoffsDist15", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"GenerateSymbol", "[", 
+   RowBox[{"fldrData", ",", 
+    RowBox[{"{", 
+     RowBox[{
+     "matStructuredSystemAndModelPosteriorProteinInteractTumorMutantsVer3Filte\
+redByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvgStruct\
+uralCPCutoffsDist15", ",", "\[IndentingNewLine]", 
+      "matSystemAndModelPosteriorProteinInteractTumorMutantsVer3FilteredByRef2\
+AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvgStructuralCPCut\
+offsDist15", ",", "\[IndentingNewLine]", 
+      "matStructuredTypelessSystemAndModelPosteriorProteinInteractTumorMutants\
+Ver3FilteredByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredBy\
+AvgStructuralCPCutoffsDist15", ",", "\[IndentingNewLine]", 
+      "matTypelessSystemAndModelPosteriorProteinInteractTumorMutantsVer3Filter\
+edByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvgStructu\
+ralCPCutoffsDist15"}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", "\"\<Done\>\""}], "Input",
+ CellChangeTimes->{{3.568593675252492*^9, 3.5685937454264402`*^9}, {
+   3.568659113987578*^9, 3.5686591153927574`*^9}, {3.595362527958692*^9, 
+   3.5953625966127872`*^9}, {3.6030248734575806`*^9, 
+   3.6030249172628207`*^9}, {3.603025074190962*^9, 3.6030250890207443`*^9}, {
+   3.6030251558443875`*^9, 3.6030251563756733`*^9}, 3.6030254692681913`*^9, 
+   3.60302555261785*^9, 3.6030257329935017`*^9, {3.6030258317727823`*^9, 
+   3.603025839054846*^9}, {3.6030669143199663`*^9, 3.6030669168672533`*^9}, {
+   3.6030676286057477`*^9, 3.60306762904338*^9}, {3.6031335932163687`*^9, 
+   3.603133594575844*^9}, 3.6031525170668797`*^9, {3.603152767798956*^9, 
+   3.6031527703462043`*^9}, {3.603152800616845*^9, 3.603152817993765*^9}, 
+   3.6031530816407804`*^9, {3.6031559674645815`*^9, 3.603155970246149*^9}, {
+   3.603156071548492*^9, 3.6031560762365155`*^9}, {3.603156236839091*^9, 
+   3.603156244324247*^9}, {3.6033806027340546`*^9, 3.603380604447686*^9}, {
+   3.6167074626300097`*^9, 3.616707464489665*^9}, {3.6167115650451946`*^9, 
+   3.616711575686719*^9}, {3.61671179358488*^9, 3.6167118447926693`*^9}}],
+
+Cell[BoxData["\<\"Done\"\>"], "Output",
+ CellChangeTimes->{3.6032001284999957`*^9, 3.6167074669118176`*^9}]
+}, {2}]],
+
+Cell["\<\
+Generate MSM/N predictions for tissue-specific mutations in COSMIC. (Note: \
+Potentially computationally intensive; recommended to be run on compute \
+cluster.)\
+\>", "Text",
+ CellChangeTimes->{{3.6167084465529337`*^9, 3.616708454944465*^9}, {
+  3.616711875311266*^9, 3.6167118977979465`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "matsStructuredSystemAndModelPosteriorProteinInteractTumorSpecificMutantsVer\
+3FilteredByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvg\
+StructuralCPCutoffsDist15", "=", 
+   RowBox[{"Block", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"datSH2Mut", "=", 
+        RowBox[{"DeleteCases", "[", 
+         RowBox[{"metadataAugmentedWithIdxSH2DomainsTumorMutantsVer3", ",", 
+          RowBox[{"{", 
+           RowBox[{"__", ",", "\"\<n\>\""}], "}"}]}], "]"}]}], ",", 
+       RowBox[{"datPhosphositesMut", "=", 
+        RowBox[{"DeleteCases", "[", 
+         RowBox[{"metadataAugmentedWithIdxPhosphositesTumorMutantsVer3", ",", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"0", ",", "__"}], "}"}], "|", 
+           RowBox[{"{", 
+            RowBox[{"__", ",", "\"\<n\>\""}], "}"}], "|", 
+           RowBox[{"{", 
+            RowBox[{"_", ",", "_", ",", "_", ",", "_", ",", "_", ",", 
+             RowBox[{"0", "|", "1"}], ",", "__"}], "}"}]}]}], "]"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"tissues", "=", "lblsTumorTypesFSORNCNDPFBASCPC"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+       "mat", "=", 
+        "matStructuredSystemAndModelPosteriorProteinInteractTumorMutantsVer3Fi\
+lteredByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvgStr\
+ucturalCPCutoffsDist15"}], ",", "\[IndentingNewLine]", "posSH2", ",", 
+       "posPhosphosites"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"posSH2", "=", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Position", "[", 
+          RowBox[{
+           RowBox[{"datSH2Mut", "\[LeftDoubleBracket]", 
+            RowBox[{"All", ",", "9"}], "\[RightDoubleBracket]"}], ",", "#"}], 
+          "]"}], "&"}], "/@", "tissues"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"posPhosphosites", "=", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Position", "[", 
+          RowBox[{
+           RowBox[{"datPhosphositesMut", "\[LeftDoubleBracket]", 
+            RowBox[{"All", ",", "11"}], "\[RightDoubleBracket]"}], ",", "#"}],
+           "]"}], "&"}], "/@", "tissues"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"MapThread", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Extract", "[", 
+            RowBox[{
+             RowBox[{
+             "mat", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
+             ",", "#1"}], "]"}], ",", 
+           RowBox[{"Extract", "[", 
+            RowBox[{
+             RowBox[{
+             "mat", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
+             ",", "#2"}], "]"}]}], "}"}], "&"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"posSH2", ",", "posPhosphosites"}], "}"}]}], "]"}]}]}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "matsSystemAndModelPosteriorProteinInteractTumorSpecificMutantsVer3FilteredB\
+yRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvgStructural\
+CPCutoffsDist15", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"SparseArray", "[", 
+      RowBox[{"Mean", "[", 
+       RowBox[{"SparseArray", "[", 
+        RowBox[{"Join", "@@", "#"}], "]"}], "]"}], "]"}], "&"}], "/@", 
+    "matsStructuredSystemAndModelPosteriorProteinInteractTumorSpecificMutantsV\
+er3FilteredByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByA\
+vgStructuralCPCutoffsDist15"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "matsStructuredTypelessSystemAndModelPosteriorProteinInteractTumorSpecificMu\
+tantsVer3FilteredByRef2AndHTFSORNCNDPFBASCPCDist15", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"SparseArray", "[", 
+      RowBox[{"Total", "[", 
+       RowBox[{
+        RowBox[{"SparseArray", "[", 
+         RowBox[{"Join", "@@", "#"}], "]"}], ",", 
+        RowBox[{"{", "4", "}"}]}], "]"}], "]"}], "&"}], "/@", 
+    "matsStructuredSystemAndModelPosteriorProteinInteractTumorSpecificMutantsV\
+er3FilteredByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByA\
+vgStructuralCPCutoffsDist15"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "matsTypelessSystemAndModelPosteriorProteinInteractTumorSpecificMutantsVer3F\
+ilteredByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvgSt\
+ructuralCPCutoffsDist15", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"SparseArray", "[", 
+      RowBox[{"Mean", "[", "#", "]"}], "]"}], "&"}], "/@", 
+    "matsStructuredTypelessSystemAndModelPosteriorProteinInteractTumorSpecific\
+MutantsVer3FilteredByRef2AndHTFSORNCNDPFBASCPCDist15"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"GenerateSymbol", "[", 
+   RowBox[{"fldrData", ",", "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+     "matsStructuredSystemAndModelPosteriorProteinInteractTumorSpecificMutants\
+Ver3FilteredByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredBy\
+AvgStructuralCPCutoffsDist15", ",", "\[IndentingNewLine]", 
+      "matsSystemAndModelPosteriorProteinInteractTumorSpecificMutantsVer3Filte\
+redByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByAvgStruct\
+uralCPCutoffsDist15", ",", "\[IndentingNewLine]", 
+      "matsStructuredTypelessSystemAndModelPosteriorProteinInteractTumorSpecif\
+icMutantsVer3FilteredByRef2AndHTFSORNCNDPFBASCPCDist15", ",", 
+      "\[IndentingNewLine]", 
+      "matsTypelessSystemAndModelPosteriorProteinInteractTumorSpecificMutantsV\
+er3FilteredByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByA\
+vgStructuralCPCutoffsDist15"}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", "\"\<Done\>\""}], "Input",
+ CellChangeTimes->{{3.6167084572263985`*^9, 3.616708458288974*^9}, {
+  3.6167119125647216`*^9, 3.6167119672268515`*^9}}],
+
+Cell[BoxData["\<\"Done\"\>"], "Output",
+ CellChangeTimes->{3.61670846017982*^9}]
+}, {2}]]
+},
+WindowSize->{1440, 817},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 374, 6, 30, "Text"],
+Cell[935, 28, 356, 10, 30, "Text"],
+Cell[CellGroupData[{
+Cell[1316, 42, 575, 12, 52, "Input"],
+Cell[1894, 56, 104, 1, 31, "Output"]
+}, {2}]],
+Cell[2010, 60, 153, 2, 30, "Text"],
+Cell[CellGroupData[{
+Cell[2188, 66, 582, 15, 72, "Input"],
+Cell[2773, 83, 135, 2, 31, "Output"]
+}, {2}]],
+Cell[2920, 88, 166, 6, 30, "Text"],
+Cell[CellGroupData[{
+Cell[3111, 98, 510, 14, 52, "Input"],
+Cell[3624, 114, 85, 1, 31, "Output"]
+}, {2}]],
+Cell[3721, 118, 2078, 47, 182, "Text"],
+Cell[CellGroupData[{
+Cell[5824, 169, 1128, 22, 192, "Input"],
+Cell[6955, 193, 83, 1, 31, "Output"]
+}, {2}]],
+Cell[7050, 197, 169, 2, 30, "Text"],
+Cell[CellGroupData[{
+Cell[7244, 203, 5549, 131, 312, "Input"],
+Cell[12796, 336, 83, 1, 31, "Output"]
+}, {2}]],
+Cell[12891, 340, 897, 18, 49, "Text"],
+Cell[CellGroupData[{
+Cell[13813, 362, 14822, 250, 893, "Code",
+ InitializationCell->False],
+Cell[28638, 614, 111, 1, 31, "Output"]
+}, {2}]],
+Cell[28761, 618, 182, 6, 30, "Text"],
+Cell[CellGroupData[{
+Cell[28968, 628, 2842, 65, 172, "Input"],
+Cell[31813, 695, 207, 3, 31, "Output"]
+}, {2}]],
+Cell[32032, 701, 314, 6, 30, "Text"],
+Cell[CellGroupData[{
+Cell[32371, 711, 2453, 50, 152, "Input"],
+Cell[34827, 763, 81, 1, 31, "Output"]
+}, {2}]],
+Cell[34920, 767, 338, 6, 30, "Text"],
+Cell[CellGroupData[{
+Cell[35283, 777, 6699, 137, 772, "Input"],
+Cell[41985, 916, 107, 1, 31, "Output"]
+}, {2}]],
+Cell[42104, 920, 303, 6, 30, "Text"],
+Cell[CellGroupData[{
+Cell[42432, 930, 5775, 130, 652, "Input"],
+Cell[48210, 1062, 80, 1, 31, "Output"]
+}, {2}]]
+}
+]
+*)
+
+(* End of internal cache information *)

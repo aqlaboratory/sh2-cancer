@@ -10,20 +10,26 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     44889,        896]
-NotebookOptionsPosition[     43641,        848]
-NotebookOutlinePosition[     43981,        863]
-CellTagsIndexPosition[     43938,        860]
+NotebookDataLength[     47652,        976]
+NotebookOptionsPosition[     46217,        922]
+NotebookOutlinePosition[     46557,        937]
+CellTagsIndexPosition[     46514,        934]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
+Cell[TextData[StyleBox["This notebook will guide you through the process of \
+training the MSM/D model from binding data.",
+ FontWeight->"Bold"]], "Text",
+ CellChangeTimes->{{3.6167032942542725`*^9, 3.6167033276643486`*^9}}],
+
 Cell[TextData[{
  StyleBox["Manually",
   FontColor->RGBColor[1, 0, 0]],
  " set root directory (where repository contents were unpacked) to ",
  StyleBox["fldr",
-  FontSlant->"Italic"],
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
  " symbol."
 }], "Text",
  CellChangeTimes->{{3.61668374010996*^9, 3.6166837431708713`*^9}, {
@@ -60,15 +66,82 @@ Cell[BoxData[{
    RowBox[{"FileNameJoin", "[", 
     RowBox[{"{", 
      RowBox[{"fldr", ",", "\"\<data\>\""}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fldrCode", "=", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{"fldr", ",", "\"\<code\>\""}], "}"}], "]"}]}], 
   ";"}], "\[IndentingNewLine]", "\"\<Done\>\""}], "Input",
- CellChangeTimes->{{3.6167017371111145`*^9, 3.6167017536910667`*^9}}],
+ CellChangeTimes->{{3.6167017371111145`*^9, 3.6167017536910667`*^9}, {
+  3.6167035214497128`*^9, 3.6167035240592723`*^9}, {3.6167109345997033`*^9, 
+  3.6167109400066147`*^9}}],
 
 Cell[BoxData["\<\"Done\"\>"], "Output",
- CellChangeTimes->{{3.6167017541442213`*^9, 3.6167017609729295`*^9}}]
+ CellChangeTimes->{{3.6167017541442213`*^9, 3.6167017609729295`*^9}, 
+   3.616710944757098*^9}]
 }, {2}]],
 
-Cell["Load needed symbols", "Text",
- CellChangeTimes->{{3.616684916530792*^9, 3.6166849189951363`*^9}}],
+Cell[TextData[{
+ "Load ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " packages"
+}], "Text",
+ CellChangeTimes->{{3.6167109511327467`*^9, 3.61671095696152*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Get", "[", 
+     RowBox[{"FileNameJoin", "[", 
+      RowBox[{"{", 
+       RowBox[{"fldrCode", ",", "#"}], "}"}], "]"}], "]"}], "&"}], "/@", 
+   RowBox[{"{", 
+    RowBox[{"\"\<misc.wl\>\"", ",", "\"\<learning.wl\>\""}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", "\"\<Loaded\>\""}], "Input",
+ CellChangeTimes->{{3.616710959039893*^9, 3.616711052706937*^9}, {
+  3.6167111383102417`*^9, 3.6167111400604773`*^9}, {3.616711171705652*^9, 
+  3.6167111718462873`*^9}}],
+
+Cell[BoxData["\<\"Loaded\"\>"], "Output",
+ CellChangeTimes->{3.6167110547853117`*^9}]
+}, {2}]],
+
+Cell[TextData[{
+ "Load needed symbols. They are:",
+ StyleBox["\n",
+  FontFamily->"Arial Narrow"],
+ StyleBox["matFourSourcesAveragedClosestPointContactMap",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ ": Average distances between residues in the SH2 domain and peptide derived \
+from representative structures.\n",
+ StyleBox["metadataSH2DomainsWithTandemFillsFiveSources",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ ": Metadata for all SH2 domains in the training set, including their amino \
+acid sequences.",
+ StyleBox["\n",
+  FontSlant->"Italic"],
+ StyleBox["metadataPeptidesTrimmedConcatenatedFiveSourcesAugmented",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ ": Metadata for all peptides in the training set, including their amino acid \
+sequences.\n",
+ StyleBox[\
+"matsProbsNonRedundantConcatenatedWithTandemFillsFiveSourcesAugmentedSet1",
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
+ ": Binary binding matrices for all biochemical binding experiments in the \
+training set."
+}], "Text",
+ CellChangeTimes->{{3.616684916530792*^9, 3.6166849189951363`*^9}, {
+  3.616703572720313*^9, 3.6167037256588287`*^9}, {3.6167037577242117`*^9, 
+  3.616703759364955*^9}, {3.6167037923855696`*^9, 3.616703794057564*^9}}],
 
 Cell[CellGroupData[{
 
@@ -459,7 +532,8 @@ Cell[BoxData["\<\"Done\"\>"], "Output",
 Cell[TextData[{
  "Execute bash script to train MSM/D model in R. ",
  StyleBox["fldr",
-  FontSlant->"Italic"],
+  FontSlant->"Italic",
+  FontColor->RGBColor[0, 0, 1]],
  " environmental variable must be ",
  StyleBox["manually",
   FontColor->RGBColor[1, 0, 0]],
@@ -862,41 +936,47 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 324, 9, 30, "Text"],
+Cell[558, 20, 224, 3, 30, "Text"],
+Cell[785, 25, 356, 10, 30, "Text"],
 Cell[CellGroupData[{
-Cell[907, 33, 558, 11, 52, "Input"],
-Cell[1468, 46, 104, 1, 31, "Output"]
+Cell[1166, 39, 558, 11, 52, "Input"],
+Cell[1727, 52, 104, 1, 31, "Output"]
 }, {2}]],
-Cell[1584, 50, 153, 2, 30, "Text"],
+Cell[1843, 56, 153, 2, 30, "Text"],
 Cell[CellGroupData[{
-Cell[1762, 56, 293, 7, 52, "Input"],
-Cell[2058, 65, 109, 1, 31, "Output"]
+Cell[2021, 62, 582, 15, 72, "Input"],
+Cell[2606, 79, 135, 2, 31, "Output"]
 }, {2}]],
-Cell[2179, 69, 103, 1, 30, "Text"],
+Cell[2753, 84, 166, 6, 30, "Text"],
 Cell[CellGroupData[{
-Cell[2307, 74, 621, 13, 112, "Input"],
-Cell[2931, 89, 83, 1, 31, "Output"]
+Cell[2944, 94, 520, 13, 52, "Input"],
+Cell[3467, 109, 85, 1, 31, "Output"]
 }, {2}]],
-Cell[3026, 93, 159, 3, 30, "Text"],
+Cell[3564, 113, 1262, 30, 106, "Text"],
 Cell[CellGroupData[{
-Cell[3210, 100, 13080, 246, 572, "Input"],
-Cell[16293, 348, 81, 1, 31, "Output"]
+Cell[4851, 147, 621, 13, 112, "Input"],
+Cell[5475, 162, 83, 1, 31, "Output"]
 }, {2}]],
-Cell[16386, 352, 124, 1, 30, "Text"],
+Cell[5570, 166, 159, 3, 30, "Text"],
 Cell[CellGroupData[{
-Cell[16535, 357, 5803, 95, 152, "Input"],
-Cell[22341, 454, 81, 1, 31, "Output"]
+Cell[5754, 173, 13080, 246, 572, "Input"],
+Cell[18837, 421, 81, 1, 31, "Output"]
 }, {2}]],
-Cell[22434, 458, 804, 16, 49, "Text"],
+Cell[18930, 425, 124, 1, 30, "Text"],
 Cell[CellGroupData[{
-Cell[23263, 478, 14923, 250, 853, "Code",
+Cell[19079, 430, 5803, 95, 152, "Input"],
+Cell[24885, 527, 81, 1, 31, "Output"]
+}, {2}]],
+Cell[24978, 531, 836, 17, 49, "Text"],
+Cell[CellGroupData[{
+Cell[25839, 552, 14923, 250, 853, "Code",
  InitializationCell->False],
-Cell[38189, 730, 111, 1, 31, "Output"]
+Cell[40765, 804, 111, 1, 31, "Output"]
 }, {2}]],
-Cell[38312, 734, 245, 7, 30, "Text"],
+Cell[40888, 808, 245, 7, 30, "Text"],
 Cell[CellGroupData[{
-Cell[38582, 745, 4962, 97, 192, "Input"],
-Cell[43547, 844, 81, 1, 31, "Output"]
+Cell[41158, 819, 4962, 97, 192, "Input"],
+Cell[46123, 918, 81, 1, 31, "Output"]
 }, {2}]]
 }
 ]
