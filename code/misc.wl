@@ -67,6 +67,16 @@ FlattenUpperTriangularize[mat_]:=Module[
 
 
 (* ::Text:: *)
+(*Return position of min/max element in a list.*)
+
+
+MinPosition[list_]:=First[MinPosition[list,1]]
+MaxPosition[list_]:=First[MaxPosition[list,1]]
+MinPosition[list_,n_]:=Ordering[list,n]
+MaxPosition[list_,n_]:=Reverse[Ordering[list,-n]]
+
+
+(* ::Text:: *)
 (*Symbol management functions.*)
 
 
