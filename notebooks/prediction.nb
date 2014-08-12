@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     50043,       1130]
-NotebookOptionsPosition[     48303,       1066]
-NotebookOutlinePosition[     48645,       1081]
-CellTagsIndexPosition[     48602,       1078]
+NotebookDataLength[     50406,       1136]
+NotebookOptionsPosition[     48652,       1071]
+NotebookOutlinePosition[     49005,       1087]
+CellTagsIndexPosition[     48962,       1084]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -113,7 +113,7 @@ Cell[BoxData[{
   3.6167112381813717`*^9, 3.6167112510109158`*^9}}],
 
 Cell[BoxData["\<\"Loaded\"\>"], "Output",
- CellChangeTimes->{3.6167110547853117`*^9}]
+ CellChangeTimes->{3.6167110547853117`*^9, 3.6167753551640253`*^9}]
 }, {2}]],
 
 Cell[TextData[{
@@ -167,32 +167,34 @@ COSMIC variants.\n",
 
 Cell[CellGroupData[{
 
-Cell[BoxData[
- RowBox[{"LoadSymbol", "[", 
-  RowBox[{"fldrData", ",", "\[IndentingNewLine]", 
-   RowBox[{"{", 
-    RowBox[{
-    "matFourSourcesAveragedClosestPointContactMap", ",", 
-     "\[IndentingNewLine]", "metadataSH2DomainsUniqueSeqHumanWTAndTumorVer3", 
-     ",", "\[IndentingNewLine]", 
-     "metadataPhosphositesUniqueSeqHumanWTAndTumorVer3", ",", 
-     "\[IndentingNewLine]", "metadataWithIdxGrpByGeneSH2DomainsHumanVer3", 
-     ",", "\[IndentingNewLine]", 
-     "metadataWithIdxGrpByGenePhosphositesHumanVer3", ",", 
-     "\[IndentingNewLine]", 
-     "metadataAugmentedWithIdxSH2DomainsTumorMutantsVer3", ",", 
-     "\[IndentingNewLine]", 
-     "metadataAugmentedWithIdxPhosphositesTumorMutantsVer3", ",", 
-     "\[IndentingNewLine]", "lblsTumorTypesFSORNCNDPFBASCPC"}], "}"}]}], 
-  "]"}]], "Input",
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"LoadSymbol", "[", 
+   RowBox[{"fldrData", ",", "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+     "matFourSourcesAveragedClosestPointContactMap", ",", 
+      "\[IndentingNewLine]", "metadataSH2DomainsUniqueSeqHumanWTAndTumorVer3",
+       ",", "\[IndentingNewLine]", 
+      "metadataPhosphositesUniqueSeqHumanWTAndTumorVer3", ",", 
+      "\[IndentingNewLine]", "metadataWithIdxGrpByGeneSH2DomainsHumanVer3", 
+      ",", "\[IndentingNewLine]", 
+      "metadataWithIdxGrpByGenePhosphositesHumanVer3", ",", 
+      "\[IndentingNewLine]", 
+      "metadataAugmentedWithIdxSH2DomainsTumorMutantsVer3", ",", 
+      "\[IndentingNewLine]", 
+      "metadataAugmentedWithIdxPhosphositesTumorMutantsVer3", ",", 
+      "\[IndentingNewLine]", "lblsTumorTypesFSORNCNDPFBASCPC"}], "}"}]}], 
+   "]"}], ";"}], "\[IndentingNewLine]", "\"\<Loaded\>\""}], "Input",
  CellChangeTimes->{{3.6166849204935613`*^9, 3.6166849440803356`*^9}, {
   3.616685185104393*^9, 3.616685185601866*^9}, {3.6167035601877127`*^9, 
   3.6167035660321226`*^9}, {3.616706658860005*^9, 3.616706666345191*^9}, {
   3.616707357914051*^9, 3.616707366650009*^9}, {3.616708245314193*^9, 
-  3.6167082459236145`*^9}}],
+  3.6167082459236145`*^9}, {3.616775367936386*^9, 3.61677536978198*^9}}],
 
 Cell[BoxData["\<\"Loaded\"\>"], "Output",
- CellChangeTimes->{3.616684980447925*^9}]
+ CellChangeTimes->{
+  3.616684980447925*^9, {3.616775364741816*^9, 3.616775370118897*^9}}]
 }, {2}]],
 
 Cell["Generate input matrices for use in R.", "Text",
@@ -945,7 +947,8 @@ StructuralCPCutoffsDist15", "=",
            RowBox[{"__", ",", "\"\<n\>\""}], "}"}]}], "]"}]}], ",", 
        RowBox[{"datPhosphositesMut", "=", 
         RowBox[{"DeleteCases", "[", 
-         RowBox[{"metadataAugmentedWithIdxPhosphositesTumorMutantsVer3", ",", 
+         RowBox[{
+         "metadataAugmentedWithIdxPhosphositesTumorMutantsVer3", ",", 
           RowBox[{
            RowBox[{"{", 
             RowBox[{"0", ",", "__"}], "}"}], "|", 
@@ -1058,15 +1061,18 @@ er3FilteredByRef2AndHTFirstAndSecondOrderResiduesNoCNoDashPositionsFilteredByA\
 vgStructuralCPCutoffsDist15"}], "}"}]}], "]"}], 
   ";"}], "\[IndentingNewLine]", "\"\<Done\>\""}], "Input",
  CellChangeTimes->{{3.6167084572263985`*^9, 3.616708458288974*^9}, {
-  3.6167119125647216`*^9, 3.6167119672268515`*^9}}],
+  3.6167119125647216`*^9, 3.6167119672268515`*^9}, {3.616776255575572*^9, 
+  3.6167762655598307`*^9}, {3.616801819013146*^9, 3.616801820026544*^9}}],
 
 Cell[BoxData["\<\"Done\"\>"], "Output",
- CellChangeTimes->{3.61670846017982*^9}]
+ CellChangeTimes->{3.61670846017982*^9, 3.616788028269389*^9, 
+  3.616801841260536*^9}]
 }, {2}]]
 },
-WindowSize->{1440, 817},
-WindowMargins->{{-8, Automatic}, {Automatic, -8}},
-FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+WindowSize->{1440, 784},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (June 27, \
+2014)",
 StyleDefinitions->"Default.nb"
 ]
 (* End of Notebook Content *)
@@ -1083,54 +1089,54 @@ Notebook[{
 Cell[558, 20, 374, 6, 30, "Text"],
 Cell[935, 28, 356, 10, 30, "Text"],
 Cell[CellGroupData[{
-Cell[1316, 42, 575, 12, 52, "Input"],
-Cell[1894, 56, 104, 1, 31, "Output"]
+Cell[1316, 42, 575, 12, 46, "Input"],
+Cell[1894, 56, 104, 1, 28, "Output"]
 }, {2}]],
 Cell[2010, 60, 153, 2, 30, "Text"],
 Cell[CellGroupData[{
 Cell[2188, 66, 582, 15, 72, "Input"],
-Cell[2773, 83, 135, 2, 31, "Output"]
+Cell[2773, 83, 135, 2, 28, "Output"]
 }, {2}]],
 Cell[2920, 88, 166, 6, 30, "Text"],
 Cell[CellGroupData[{
-Cell[3111, 98, 510, 14, 52, "Input"],
-Cell[3624, 114, 85, 1, 31, "Output"]
+Cell[3111, 98, 510, 14, 46, "Input"],
+Cell[3624, 114, 109, 1, 28, "Output"]
 }, {2}]],
-Cell[3721, 118, 2078, 47, 182, "Text"],
+Cell[3745, 118, 2078, 47, 182, "Text"],
 Cell[CellGroupData[{
-Cell[5824, 169, 1128, 22, 192, "Input"],
-Cell[6955, 193, 83, 1, 31, "Output"]
+Cell[5848, 169, 1250, 23, 182, "Input"],
+Cell[7101, 194, 132, 2, 28, "Output"]
 }, {2}]],
-Cell[7050, 197, 169, 2, 30, "Text"],
+Cell[7245, 199, 169, 2, 30, "Text"],
 Cell[CellGroupData[{
-Cell[7244, 203, 5549, 131, 312, "Input"],
-Cell[12796, 336, 83, 1, 31, "Output"]
+Cell[7439, 205, 5549, 131, 312, "Input"],
+Cell[12991, 338, 83, 1, 28, "Output"]
 }, {2}]],
-Cell[12891, 340, 897, 18, 49, "Text"],
+Cell[13086, 342, 897, 18, 49, "Text"],
 Cell[CellGroupData[{
-Cell[13813, 362, 14822, 250, 893, "Code",
+Cell[14008, 364, 14822, 250, 893, "Code",
  InitializationCell->False],
-Cell[28638, 614, 111, 1, 31, "Output"]
+Cell[28833, 616, 111, 1, 28, "Output"]
 }, {2}]],
-Cell[28761, 618, 182, 6, 30, "Text"],
+Cell[28956, 620, 182, 6, 30, "Text"],
 Cell[CellGroupData[{
-Cell[28968, 628, 2842, 65, 172, "Input"],
-Cell[31813, 695, 207, 3, 31, "Output"]
+Cell[29163, 630, 2842, 65, 172, "Input"],
+Cell[32008, 697, 207, 3, 28, "Output"]
 }, {2}]],
-Cell[32032, 701, 314, 6, 30, "Text"],
+Cell[32227, 703, 314, 6, 30, "Text"],
 Cell[CellGroupData[{
-Cell[32371, 711, 2453, 50, 152, "Input"],
-Cell[34827, 763, 81, 1, 31, "Output"]
+Cell[32566, 713, 2453, 50, 132, "Input"],
+Cell[35022, 765, 81, 1, 28, "Output"]
 }, {2}]],
-Cell[34920, 767, 338, 6, 30, "Text"],
+Cell[35115, 769, 338, 6, 30, "Text"],
 Cell[CellGroupData[{
-Cell[35283, 777, 6699, 137, 772, "Input"],
-Cell[41985, 916, 107, 1, 31, "Output"]
+Cell[35478, 779, 6699, 137, 643, "Input"],
+Cell[42180, 918, 107, 1, 28, "Output"]
 }, {2}]],
-Cell[42104, 920, 303, 6, 30, "Text"],
+Cell[42299, 922, 303, 6, 30, "Text"],
 Cell[CellGroupData[{
-Cell[42432, 930, 5775, 130, 652, "Input"],
-Cell[48210, 1062, 80, 1, 31, "Output"]
+Cell[42627, 932, 5882, 132, 540, "Input"],
+Cell[48512, 1066, 127, 2, 28, "Output"]
 }, {2}]]
 }
 ]
