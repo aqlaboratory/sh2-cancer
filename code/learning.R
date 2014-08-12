@@ -63,7 +63,7 @@ for (dist in nDistRange)
 	     foreach (predSet = nPredictionRange) %:%
           foreach (flagIntercept = statesIntercept) %:%
 			foreach (flagVarWeights = statesVarWeights) %:%
-			  foreach (de = gridDeDmGamma[,1], dm = gridDeDmGamma[,2], gamma = gridDeDmGamma[,3]) % dopar %
+			  foreach (de = gridDeDmGamma[,1], dm = gridDeDmGamma[,2], gamma = gridDeDmGamma[,3]) %dopar%
 			  {
 				  lblCVLevel <- ifelse(lvl1CVSet == -1, 0, ifelse(lvl2CVSet == -1, 1, 2));
 				  if (!flagPrediction)
