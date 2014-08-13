@@ -129,3 +129,9 @@ SwitchContextB[context_]:=Begin[context]
 
 
 ParentContext[]:=StringJoin[Riffle[Most[StringSplit[Context[],"`"]],"`",{2,-1,2}]]
+
+
+ExportExpression[fldr_String,expr_,level_Integer:-2,format_String:"Text"]:=(
+	If[\[Not]DirectoryQ[fldr],CreateDirectory[fldr]];
+	MapIndexed[Export[FileNameJoin[{fldr,StringReplace[ToString[#2],"{"|"}"|" "->""]}],#1,"List"]&,expr,{level}];
+	"Exported "~~fldr)
