@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     60278,       1277]
-NotebookOptionsPosition[     58687,       1218]
-NotebookOutlinePosition[     59027,       1233]
-CellTagsIndexPosition[     58984,       1230]
+NotebookDataLength[     59703,       1258]
+NotebookOptionsPosition[     58097,       1198]
+NotebookOutlinePosition[     58450,       1214]
+CellTagsIndexPosition[     58407,       1211]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -48,10 +48,13 @@ Cell[BoxData[
   "\"\<Done\>\""}]], "Input",
  CellChangeTimes->{{3.6166837447944145`*^9, 3.616683753518712*^9}, {
   3.616701521793441*^9, 3.6167015227466335`*^9}, {3.6167016596639233`*^9, 
-  3.6167016650239654`*^9}, {3.6167020611214294`*^9, 3.616702074497651*^9}}],
+  3.6167016650239654`*^9}, {3.6167020611214294`*^9, 3.616702074497651*^9}, {
+  3.616924947168406*^9, 3.616924948984157*^9}, {3.616925031195621*^9, 
+  3.616925033127254*^9}}],
 
 Cell[BoxData["\<\"Done\"\>"], "Output",
- CellChangeTimes->{3.6166837537949743`*^9, 3.61670175928531*^9}]
+ CellChangeTimes->{3.6166837537949743`*^9, 3.61670175928531*^9, 
+  3.6169249493793287`*^9}]
 }, {2}]],
 
 Cell["Set other directories", "Text",
@@ -79,7 +82,7 @@ Cell[BoxData[{
 
 Cell[BoxData["\<\"Done\"\>"], "Output",
  CellChangeTimes->{{3.6167017541442213`*^9, 3.6167017609729295`*^9}, 
-   3.616710944757098*^9}]
+   3.616710944757098*^9, 3.6169249558382883`*^9}]
 }, {2}]],
 
 Cell[TextData[{
@@ -108,7 +111,7 @@ Cell[BoxData[{
   3.6167111718462873`*^9}}],
 
 Cell[BoxData["\<\"Loaded\"\>"], "Output",
- CellChangeTimes->{3.6167110547853117`*^9}]
+ CellChangeTimes->{3.6167110547853117`*^9, 3.6169249615899477`*^9}]
 }, {2}]],
 
 Cell[TextData[{
@@ -172,13 +175,16 @@ Cell[BoxData[{
   3.616775394925318*^9}, {3.61688493288914*^9, 3.616884933467308*^9}}],
 
 Cell[BoxData["\<\"Loaded\"\>"], "Output",
- CellChangeTimes->{3.616684980447925*^9}]
+ CellChangeTimes->{3.616684980447925*^9, 3.616924986643642*^9}]
 }, {2}]],
 
 Cell["\<\
-Generate input matrices and feature distances vectors for use in R.\
+Generate input matrices and feature distances vectors for use in R. (Note: \
+Potentially computationally intensive; recommended to be run on compute \
+cluster. Insure that all necessary R packages are installed.)\
 \>", "Text",
- CellChangeTimes->{{3.616683617805634*^9, 3.6166836416743345`*^9}}],
+ CellChangeTimes->{{3.616683617805634*^9, 3.6166836416743345`*^9}, 
+   3.6169250054580717`*^9}],
 
 Cell[CellGroupData[{
 
@@ -579,26 +585,20 @@ Set1", "]"}], "]"}]}], ",",
      RowBox[{"BlockRandom", "[", "\[IndentingNewLine]", 
       RowBox[{
        RowBox[{"SeedRandom", "[", "1", "]"}], ";", "\[IndentingNewLine]", 
-       RowBox[{
-       "idxProbsNonRedundantFiveSourcesAugmentedAllRandomFTCVTestSetsLevel1Wit\
-hNulls", "=", 
+       RowBox[{"idxPNRFSAAllRandomFTCVTestSetsLevel1WithNulls", "=", 
         RowBox[{"Sort", "/@", 
          RowBox[{"Partition", "[", 
           RowBox[{
            RowBox[{"RandomSample", "[", "idxes", "]"}], ",", 
            "sizeLevel1Sets"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
-       RowBox[{
-       "idxProbsNonRedundantFiveSourcesAugmentedAllRandomFTCVTrainingSetsLevel\
-1WithNulls", "=", 
+       RowBox[{"idxPNRFSAAllRandomFTCVTrainingSetsLevel1WithNulls", "=", 
         RowBox[{
          RowBox[{
           RowBox[{"Complement", "[", 
            RowBox[{"idxes", ",", "#"}], "]"}], "&"}], "/@", 
-         "idxProbsNonRedundantFiveSourcesAugmentedAllRandomFTCVTestSetsLevel1W\
-ithNulls"}]}], ";", "\[IndentingNewLine]", 
-       RowBox[{
-       "idxProbsNonRedundantFiveSourcesAugmentedAllRandomFTCVTestSetsLevel2Wit\
-hNulls", "=", 
+         "idxPNRFSAAllRandomFTCVTestSetsLevel1WithNulls"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"idxPNRFSAAllRandomFTCVTestSetsLevel2WithNulls", "=", 
         RowBox[{
          RowBox[{
           RowBox[{"(", 
@@ -607,11 +607,9 @@ hNulls", "=",
              RowBox[{
               RowBox[{"RandomSample", "[", "#", "]"}], ",", 
               "sizeLevel2Sets"}], "]"}]}], ")"}], "&"}], "/@", 
-         "idxProbsNonRedundantFiveSourcesAugmentedAllRandomFTCVTrainingSetsLev\
-el1WithNulls"}]}], ";", "\[IndentingNewLine]", 
-       RowBox[{
-       "idxProbsNonRedundantFiveSourcesAugmentedAllRandomFTCVTrainingSetsLevel\
-2WithNulls", "=", 
+         "idxPNRFSAAllRandomFTCVTrainingSetsLevel1WithNulls"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"idxPNRFSAAllRandomFTCVTrainingSetsLevel2WithNulls", "=", 
         RowBox[{"MapThread", "[", "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{"Function", "[", 
@@ -625,15 +623,11 @@ el1WithNulls"}]}], ";", "\[IndentingNewLine]",
              "setsTest"}]}], "]"}], ",", "\[IndentingNewLine]", 
           RowBox[{"{", 
            RowBox[{
-           "idxProbsNonRedundantFiveSourcesAugmentedAllRandomFTCVTrainingSetsL\
-evel1WithNulls", ",", 
-            "idxProbsNonRedundantFiveSourcesAugmentedAllRandomFTCVTestSetsLeve\
-l2WithNulls"}], "}"}]}], "]"}]}]}], "]"}]}]}], "]"}], 
-  ";"}], "\[IndentingNewLine]", 
+           "idxPNRFSAAllRandomFTCVTrainingSetsLevel1WithNulls", ",", 
+            "idxPNRFSAAllRandomFTCVTestSetsLevel2WithNulls"}], "}"}]}], 
+         "]"}]}]}], "]"}]}]}], "]"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{
-  "idxProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTestSetsLevel1\
-WithNullsSet1", "=", 
+  RowBox[{"idxPNRFSANoNegOneAllRandomFTCVTestSetsLevel1WithNullsSet1", "=", 
    RowBox[{"Map", "[", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"Function", "[", 
@@ -643,14 +637,13 @@ WithNullsSet1", "=",
          RowBox[{
           RowBox[{"Intersection", "[", 
            RowBox[{"#", ",", "idxSetNonNegOne"}], "]"}], "&"}], ",", 
-         "idxProbsNonRedundantFiveSourcesAugmentedAllRandomFTCVTestSetsLevel1W\
-ithNulls"}], "]"}]}], "]"}], ",", "\[IndentingNewLine]", 
+         "idxPNRFSAAllRandomFTCVTestSetsLevel1WithNulls"}], "]"}]}], "]"}], 
+     ",", "\[IndentingNewLine]", 
      "idxProbsNonRedundantWithTandemFillsFiveSourcesAugmentedNonNegOneSet1"}],
      "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-  "idxProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTrainingSetsLe\
-vel1WithNullsSet1", "=", 
+  "idxPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel1WithNullsSet1", "=", 
    RowBox[{"Map", "[", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"Function", "[", 
@@ -660,14 +653,12 @@ vel1WithNullsSet1", "=",
          RowBox[{
           RowBox[{"Intersection", "[", 
            RowBox[{"#", ",", "idxSetNonNegOne"}], "]"}], "&"}], ",", 
-         "idxProbsNonRedundantFiveSourcesAugmentedAllRandomFTCVTrainingSetsLev\
-el1WithNulls"}], "]"}]}], "]"}], ",", "\[IndentingNewLine]", 
+         "idxPNRFSAAllRandomFTCVTrainingSetsLevel1WithNulls"}], "]"}]}], 
+      "]"}], ",", "\[IndentingNewLine]", 
      "idxProbsNonRedundantWithTandemFillsFiveSourcesAugmentedNonNegOneSet1"}],
      "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{
-  "idxProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTestSetsLevel2\
-WithNullsSet1", "=", 
+  RowBox[{"idxPNRFSANoNegOneAllRandomFTCVTestSetsLevel2WithNullsSet1", "=", 
    RowBox[{"Map", "[", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"Function", "[", 
@@ -677,16 +668,14 @@ WithNullsSet1", "=",
          RowBox[{
           RowBox[{"Intersection", "[", 
            RowBox[{"#", ",", "idxSetNonNegOne"}], "]"}], "&"}], ",", 
-         "idxProbsNonRedundantFiveSourcesAugmentedAllRandomFTCVTestSetsLevel2W\
-ithNulls", ",", 
+         "idxPNRFSAAllRandomFTCVTestSetsLevel2WithNulls", ",", 
          RowBox[{"{", "2", "}"}]}], "]"}]}], "]"}], ",", 
      "\[IndentingNewLine]", 
      "idxProbsNonRedundantWithTandemFillsFiveSourcesAugmentedNonNegOneSet1"}],
      "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-  "idxProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTrainingSetsLe\
-vel2WithNullsSet1", "=", 
+  "idxPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel2WithNullsSet1", "=", 
    RowBox[{"Map", "[", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"Function", "[", 
@@ -696,21 +685,18 @@ vel2WithNullsSet1", "=",
          RowBox[{
           RowBox[{"Intersection", "[", 
            RowBox[{"#", ",", "idxSetNonNegOne"}], "]"}], "&"}], ",", 
-         "idxProbsNonRedundantFiveSourcesAugmentedAllRandomFTCVTrainingSetsLev\
-el2WithNulls", ",", 
+         "idxPNRFSAAllRandomFTCVTrainingSetsLevel2WithNulls", ",", 
          RowBox[{"{", "2", "}"}]}], "]"}]}], "]"}], ",", 
      "\[IndentingNewLine]", 
      "idxProbsNonRedundantWithTandemFillsFiveSourcesAugmentedNonNegOneSet1"}],
      "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-  "idxProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTrainingSetsLe\
-vel0WithNullsSet1", "=", 
+  "idxPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel0WithNullsSet1", "=", 
    RowBox[{"Union", "/@", 
     RowBox[{"Flatten", "[", 
      RowBox[{
-     "idxProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTrainingSet\
-sLevel1WithNullsSet1", ",", 
+     "idxPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel1WithNullsSet1", ",", 
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", "1", "}"}], ",", 
@@ -721,16 +707,13 @@ sLevel1WithNullsSet1", ",",
   RowBox[{
    RowBox[{"{", 
     RowBox[{
-    "idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTrainingSe\
-tsLevel0WithNullsSet1", ",", "\[IndentingNewLine]", 
-     "idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTestSetsL\
-evel1WithNullsSet1", ",", 
-     "idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTrainingS\
-etsLevel1WithNullsSet1", ",", 
-     "idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTestSetsL\
-evel2WithNullsSet1", ",", 
-     "idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTrainingS\
-etsLevel2WithNullsSet1"}], "}"}], "=", 
+    "idx1DPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel0WithNullsSet1", ",", 
+     "\[IndentingNewLine]", 
+     "idx1DPNRFSANoNegOneAllRandomFTCVTestSetsLevel1WithNullsSet1", ",", 
+     "idx1DPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel1WithNullsSet1", ",", 
+     "idx1DPNRFSANoNegOneAllRandomFTCVTestSetsLevel2WithNullsSet1", ",", 
+     "idx1DPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel2WithNullsSet1"}], 
+    "}"}], "=", 
    RowBox[{"With", "[", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"{", 
@@ -743,17 +726,13 @@ etsLevel2WithNullsSet1"}], "}"}], "=",
        RowBox[{"idxes", "=", 
         RowBox[{"{", "\[IndentingNewLine]", 
          RowBox[{
-         "idxProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTrainin\
-gSetsLevel0WithNullsSet1", ",", "\[IndentingNewLine]", 
-          
-          "idxProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTestSe\
-tsLevel1WithNullsSet1", ",", 
-          "idxProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTraini\
-ngSetsLevel1WithNullsSet1", ",", 
-          "idxProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTestSe\
-tsLevel2WithNullsSet1", ",", 
-          "idxProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTraini\
-ngSetsLevel2WithNullsSet1"}], "}"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+         "idxPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel0WithNullsSet1", ",",
+           "\[IndentingNewLine]", 
+          "idxPNRFSANoNegOneAllRandomFTCVTestSetsLevel1WithNullsSet1", ",", 
+          "idxPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel1WithNullsSet1", 
+          ",", "idxPNRFSANoNegOneAllRandomFTCVTestSetsLevel2WithNullsSet1", 
+          ",", "idxPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel2WithNullsSet1"\
+}], "}"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
      RowBox[{"Apply", "[", 
       RowBox[{
        RowBox[{
@@ -774,34 +753,32 @@ ngSetsLevel2WithNullsSet1"}], "}"}]}]}], "}"}], ",", "\[IndentingNewLine]",
       RowBox[{
        RowBox[{"FileNameJoin", "[", 
         RowBox[{"{", 
-         RowBox[{"fldrData", ",", "#1"}], "}"}], "]"}], ",", "#2"}], "]"}], 
-     "&"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"\"\</Users/mohammedalquraishi/tmp/data/\>\"", ",", "#1"}], 
+         "}"}], "]"}], ",", "#2"}], "]"}], "&"}], ",", "\[IndentingNewLine]", 
+    
     RowBox[{"{", 
      RowBox[{
       RowBox[{"{", 
        RowBox[{
-       "\"\<idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTra\
-iningSetsLevel0WithNullsSet1\>\"", ",", "\[IndentingNewLine]", 
-        "\"\<idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTe\
-stSetsLevel1WithNullsSet1\>\"", ",", 
-        "\"\<idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTr\
-ainingSetsLevel1WithNullsSet1\>\"", ",", 
-        "\"\<idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTe\
-stSetsLevel2WithNullsSet1\>\"", ",", 
-        "\"\<idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTr\
-ainingSetsLevel2WithNullsSet1\>\""}], "}"}], ",", 
+       "\"\<idx1DPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel0WithNullsSet1\>\
+\"", ",", "\[IndentingNewLine]", 
+        "\"\<idx1DPNRFSANoNegOneAllRandomFTCVTestSetsLevel1WithNullsSet1\>\"",
+         ",", "\"\<\
+idx1DPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel1WithNullsSet1\>\"", ",", 
+        "\"\<idx1DPNRFSANoNegOneAllRandomFTCVTestSetsLevel2WithNullsSet1\>\"",
+         ",", "\"\<\
+idx1DPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel2WithNullsSet1\>\""}], "}"}],
+       ",", 
       RowBox[{"{", 
        RowBox[{
-       "idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTrainin\
-gSetsLevel0WithNullsSet1", ",", "\[IndentingNewLine]", 
-        "idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTestSe\
-tsLevel1WithNullsSet1", ",", 
-        "idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTraini\
-ngSetsLevel1WithNullsSet1", ",", 
-        "idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTestSe\
-tsLevel2WithNullsSet1", ",", 
-        "idx1DProbsNonRedundantFiveSourcesAugmentedNoNegOneAllRandomFTCVTraini\
-ngSetsLevel2WithNullsSet1"}], "}"}]}], "}"}]}], "]"}], ";"}]}], "Input",
+       "idx1DPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel0WithNullsSet1", ",",
+         "\[IndentingNewLine]", 
+        "idx1DPNRFSANoNegOneAllRandomFTCVTestSetsLevel1WithNullsSet1", ",", 
+        "idx1DPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel1WithNullsSet1", 
+        ",", "idx1DPNRFSANoNegOneAllRandomFTCVTestSetsLevel2WithNullsSet1", 
+        ",", "idx1DPNRFSANoNegOneAllRandomFTCVTrainingSetsLevel2WithNullsSet1"\
+}], "}"}]}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", "\"\<Done\>\""}], "Input",
  CellChangeTimes->{{3.5369614316277285`*^9, 3.5369614543870306`*^9}, {
    3.5369614845477557`*^9, 3.5369614860108395`*^9}, {3.536961531603447*^9, 
    3.536961554924781*^9}, {3.5369615902378006`*^9, 3.536961683724148*^9}, {
@@ -819,10 +796,12 @@ ngSetsLevel2WithNullsSet1"}], "}"}]}], "}"}]}], "]"}], ";"}]}], "Input",
    3.5931927614392805`*^9}, {3.5965652574658656`*^9, 3.596565300309536*^9}, {
    3.603642847280969*^9, 3.6036428705216894`*^9}, {3.603642913324576*^9, 
    3.603642944754341*^9}, {3.6168844888925233`*^9, 3.616884550419422*^9}, 
-   3.6168845861607294`*^9}],
+   3.6168845861607294`*^9, {3.616925017522087*^9, 3.6169250191755743`*^9}, {
+   3.616925079050331*^9, 3.6169250803285027`*^9}, {3.616930835273044*^9, 
+   3.616930896445047*^9}}],
 
 Cell[BoxData["\<\"Done\"\>"], "Output",
- CellChangeTimes->{3.6168845945544777`*^9}]
+ CellChangeTimes->{3.6168845945544777`*^9, 3.6169301065115747`*^9}]
 }, {2}]],
 
 Cell[TextData[{
@@ -878,6 +857,7 @@ Cell[BoxData[{
   RowBox[{"grid", "=", "\"\<as.matrix(rbind(c(1,1,0.9)))\>\""}], "\n"}], "\n", 
  RowBox[{
   RowBox[{"for", " ", "dist", " ", "in", " ", "15"}], ";", " ", "do"}], "\n", 
+
  RowBox[{" ", 
   RowBox[{
    RowBox[{"for", " ", "cv", " ", "in", " ", "\"\<AllRandomFT\>\""}], ";", 
@@ -1216,9 +1196,10 @@ Cell[BoxData["\<\"Loaded\"\>"], "Output",
  CellChangeTimes->{3.6166905406171*^9}]
 }, {2}]]
 },
-WindowSize->{1424, 817},
+WindowSize->{1440, 784},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
-FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (June 27, \
+2014)",
 StyleDefinitions->"Default.nb"
 ]
 (* End of Notebook Content *)
@@ -1235,49 +1216,49 @@ Notebook[{
 Cell[558, 20, 224, 3, 30, "Text"],
 Cell[785, 25, 356, 10, 30, "Text"],
 Cell[CellGroupData[{
-Cell[1166, 39, 558, 11, 52, "Input"],
-Cell[1727, 52, 104, 1, 31, "Output"]
+Cell[1166, 39, 656, 13, 46, "Input"],
+Cell[1825, 54, 131, 2, 28, "Output"]
 }, {2}]],
-Cell[1843, 56, 153, 2, 30, "Text"],
+Cell[1968, 59, 153, 2, 30, "Text"],
 Cell[CellGroupData[{
-Cell[2021, 62, 582, 15, 72, "Input"],
-Cell[2606, 79, 135, 2, 31, "Output"]
+Cell[2146, 65, 582, 15, 63, "Input"],
+Cell[2731, 82, 159, 2, 28, "Output"]
 }, {2}]],
-Cell[2753, 84, 166, 6, 30, "Text"],
+Cell[2902, 87, 166, 6, 30, "Text"],
 Cell[CellGroupData[{
-Cell[2944, 94, 520, 13, 52, "Input"],
-Cell[3467, 109, 85, 1, 31, "Output"]
+Cell[3093, 97, 520, 13, 46, "Input"],
+Cell[3616, 112, 109, 1, 28, "Output"]
 }, {2}]],
-Cell[3564, 113, 1571, 37, 125, "Text"],
+Cell[3737, 116, 1571, 37, 125, "Text"],
 Cell[CellGroupData[{
-Cell[5160, 154, 894, 17, 152, "Input"],
-Cell[6057, 173, 83, 1, 31, "Output"]
+Cell[5333, 157, 894, 17, 131, "Input"],
+Cell[6230, 176, 105, 1, 28, "Output"]
 }, {2}]],
-Cell[6152, 177, 159, 3, 30, "Text"],
+Cell[6347, 180, 332, 6, 30, "Text"],
 Cell[CellGroupData[{
-Cell[6336, 184, 13080, 246, 572, "Input"],
-Cell[19419, 432, 81, 1, 31, "Output"]
+Cell[6704, 190, 13080, 246, 572, "Input"],
+Cell[19787, 438, 81, 1, 28, "Output"]
 }, {2}]],
-Cell[19512, 436, 124, 1, 30, "Text"],
+Cell[19880, 442, 124, 1, 30, "Text"],
 Cell[CellGroupData[{
-Cell[19661, 441, 5803, 95, 152, "Input"],
-Cell[25467, 538, 81, 1, 31, "Output"]
+Cell[20029, 447, 5803, 95, 152, "Input"],
+Cell[25835, 544, 81, 1, 28, "Output"]
 }, {2}]],
-Cell[25560, 542, 176, 4, 30, "Text"],
+Cell[25928, 548, 176, 4, 30, "Text"],
 Cell[CellGroupData[{
-Cell[25761, 550, 11589, 271, 1160, "Input"],
-Cell[37353, 823, 83, 1, 31, "Output"]
+Cell[26129, 556, 10606, 244, 827, "Input"],
+Cell[36738, 802, 107, 1, 28, "Output"]
 }, {2}]],
-Cell[37448, 827, 836, 17, 49, "Text"],
+Cell[36857, 806, 836, 17, 49, "Text"],
 Cell[CellGroupData[{
-Cell[38309, 848, 14923, 250, 853, "Code",
+Cell[37718, 827, 14924, 251, 672, "Code",
  InitializationCell->False],
-Cell[53235, 1100, 111, 1, 31, "Output"]
+Cell[52645, 1080, 111, 1, 28, "Output"]
 }, {2}]],
-Cell[53358, 1104, 245, 7, 30, "Text"],
+Cell[52768, 1084, 245, 7, 30, "Text"],
 Cell[CellGroupData[{
-Cell[53628, 1115, 4962, 97, 192, "Input"],
-Cell[58593, 1214, 81, 1, 31, "Output"]
+Cell[53038, 1095, 4962, 97, 192, "Input"],
+Cell[58003, 1194, 81, 1, 28, "Output"]
 }, {2}]]
 }
 ]
